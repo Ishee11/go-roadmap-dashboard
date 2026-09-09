@@ -1,0 +1,240 @@
+version: 1
+updated_at: '2026-09-09'
+skill_catalog: data/skills.yaml
+
+skills:
+  go-core.value-semantics:
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence: [{ref: knowledge/structs.yaml, type: mixed}]
+    note: Копирование struct, pointer aliasing и ссылочные поля неоднократно разобраны на свежих примерах.
+  go-core.slice-mechanics:
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/structs.yaml, type: mixed}
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+  go-core.map-semantics:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence: [{ref: knowledge/maps.yaml, type: mixed}]
+    note: Практическая работа с map сильнее, чем устойчивый recall nil-map semantics.
+  go-core.map-aliasing-copying:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence: [{ref: knowledge/maps.yaml, type: mixed}]
+    note: Mutation vs local reassignment и shallow copy пока нестабильны без повторения.
+  go-core.map-task-tool:
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/maps.yaml, type: coding}
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+  go-core.struct-semantics:
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence: [{ref: knowledge/structs.yaml, type: mixed}]
+  go-core.receivers-method-set:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/structs.yaml, type: mixed}
+      - {ref: progress.yaml, type: historical}
+    note: Обычные receiver-сценарии понятны, но formal method set в смешанном embedding ещё требовал коррекции.
+  go-core.embedding-promotion:
+    current: {level: understanding, stage: comparison, confirmation: confirmed}
+    evidence: [{ref: knowledge/structs.yaml, type: mixed}]
+  go-core.interface-model:
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/interfaces.yaml, type: mixed}
+      - {ref: progress.yaml, type: historical}
+  go-core.type-assertion-switch:
+    current: {level: application, stage: independent, confirmation: provisional}
+    evidence: [{ref: progress.yaml, type: historical}]
+    note: Более свежий progress содержит успешные assertion/switch ответы, но отдельного повторения ещё нет.
+  go-core.errors-mechanics:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/errors.yaml, type: mixed}
+      - {ref: progress.yaml, type: historical}
+    note: Логика Is/As/wrapping сильная, но в самостоятельном коде были исправления синтаксиса и приёмника errors.As.
+  go-core.error-contract-boundaries:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/errors.yaml, type: reasoning}
+      - {ref: progress.yaml, type: historical}
+  go-core.json-dto:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence: [{ref: progress.yaml, type: historical}]
+    note: Есть evidence по JSON validation и optional pointer semantics, но нет самостоятельной прикладной проверки encoding/json/DTO.
+
+  concurrency.goroutine-lifecycle:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/concurrency.yaml, type: explanation}
+      - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
+    note: Самостоятельно объяснено, что main не ждёт goroutine и Sleep не является синхронизацией; кодовая проверка не выполнена.
+  concurrency.goroutine-ownership-termination:
+    current: {level: understanding, stage: explanation, confirmation: provisional}
+    evidence:
+      - {ref: knowledge/concurrency.yaml, type: explanation}
+      - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
+  concurrency.data-race:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/concurrency.yaml, type: reasoning}
+      - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: reasoning, date: '2026-09-08'}
+    note: Самостоятельно найден риск потерянных increment и названы Mutex/atomic; самостоятельное исправление кодом ещё не подтверждено.
+  concurrency.waitgroup:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/concurrency.yaml, type: explanation}
+      - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
+    note: Понимает WaitGroup как ожидание завершения, не как задание порядка; требуется live coding.
+  concurrency.mutex:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/concurrency.yaml, type: explanation}
+      - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
+  concurrency.atomic:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence:
+      - {ref: knowledge/concurrency.yaml, type: explanation}
+      - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
+    note: Назван как подходящий инструмент для простых атомарных операций; нужна отдельная проверка границ применимости.
+
+  sql-postgresql.query-basics:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence: [{ref: sessions/2026-09-01-sql-interview-practice.md, type: coding, date: '2026-09-01'}]
+    note: Каркас запросов собирается, но на новой формулировке ещё встречаются ошибки WHERE/GROUP BY/фильтров.
+  sql-postgresql.join-aggregation:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/sql.yaml, type: mixed}
+      - {ref: sessions/2026-09-01-sql-interview-practice.md, type: coding, date: '2026-09-01'}
+  sql-postgresql.subqueries-cte:
+    current: {level: application, stage: template, confirmation: confirmed}
+    evidence: [{ref: sessions/2026-09-01-sql-interview-practice.md, type: coding, date: '2026-09-01'}]
+  sql-postgresql.window-functions-distinct-on:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: explanation}]
+    note: DISTINCT ON разобран после объяснения; window functions ещё не подтверждены практикой.
+  sql-postgresql.schema-constraints:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: reasoning}]
+  sql-postgresql.btree-composite-index-design:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: reasoning}]
+  sql-postgresql.partial-expression-indexes:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: explanation}]
+  sql-postgresql.scan-methods:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence: [{ref: knowledge/sql.yaml, type: explanation}]
+    note: Seq/Index/Bitmap объясняются самостоятельно; Index Only/Visibility Map получены после объяснения.
+  sql-postgresql.explain-analyze:
+    current: {level: analysis, stage: decomposition, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: analysis}]
+  sql-postgresql.physical-join-algorithms:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: explanation}]
+  sql-postgresql.transactions:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: reasoning}]
+    note: Концептуальная модель сильная, но самостоятельное оформление transaction boundary кодом/SQL не подтверждено.
+  sql-postgresql.isolation-anomalies:
+    current: {level: analysis, stage: patterns, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: analysis}]
+  sql-postgresql.mvcc-snapshots:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: reasoning}]
+  sql-postgresql.row-locks:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: reasoning}]
+  sql-postgresql.deadlocks:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: reasoning}]
+  sql-postgresql.vacuum-analyze-autovacuum:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: explanation}]
+  sql-postgresql.hot-fillfactor:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence: [{ref: knowledge/sql.yaml, type: explanation}]
+
+  http-networks-api.request-path-layer-boundaries:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/http-networks-api.yaml, type: explanation}
+      - {ref: knowledge/networking.yaml, type: explanation}
+    note: Модель построена theory_first; полный путь без подсказки ещё не проверен.
+  http-networks-api.ip-ports-sockets:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence: [{ref: knowledge/http-networks-api.yaml, type: explanation}]
+  http-networks-api.ethernet-mtu-mss-details:
+    current: {level: understanding, stage: explanation, confirmation: provisional}
+    evidence: [{ref: knowledge/http-networks-api.yaml, type: explanation}]
+  http-networks-api.tcp-connection-byte-stream:
+    current: {level: understanding, stage: explanation, confirmation: confirmed}
+    evidence: [{ref: knowledge/http-networks-api.yaml, type: explanation}]
+    note: Byte-stream/segmentation понятны; handshake/retransmission lifecycle ещё не подтверждены.
+  http-networks-api.http-message-model:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence:
+      - {ref: knowledge/http-networks-api.yaml, type: explanation}
+      - {ref: knowledge/errors.yaml, type: reasoning}
+  http-networks-api.http-methods-idempotency:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
+    note: Есть корректное рассуждение про идемпотентный DELETE, но не полный набор method semantics.
+  http-networks-api.http-error-status-contract:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/errors.yaml, type: reasoning}
+      - {ref: progress.yaml, type: historical}
+  http-networks-api.net-http-handlers-middleware:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
+    note: Границы handler/use case понимаются, самостоятельный handler не проверен.
+  http-networks-api.retry-policy:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
+    note: Есть классификация retryable/non-retryable, но самостоятельная policy-задача не подтверждена.
+
+  live-coding.basic-go-coding-automation:
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+      - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
+  live-coding.one-pass-state-modeling:
+    current: {level: application, stage: template, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
+      - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: coding, date: '2026-09-03'}
+  live-coding.state-lifecycle-indices:
+    current: {level: application, stage: template, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
+      - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: coding, date: '2026-09-03'}
+  live-coding.map-set-frequency-lookup:
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+      - {ref: knowledge/maps.yaml, type: coding}
+  live-coding.strings-runes:
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+      - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
+  live-coding.sliding-window:
+    current: {level: application, stage: template, confirmation: provisional}
+    evidence: [{ref: knowledge/algorithms-data-structures.yaml, type: coding}]
+    note: Fixed window доведено после объяснения; нужен новый пример без напоминания i-k/initial window.
+  live-coding.complexity:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence: [{ref: sessions/2026-08-31-live-coding-basics-18.md, type: explanation, date: '2026-08-31'}]
+    note: Сложность фиксировалась в разборе, но самостоятельное стабильное проговаривание ещё не подтверждено.
+  live-coding.edge-cases-manual-verification:
+    current: {level: application, stage: template, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+  live-coding.interview-execution:
+    current: {level: application, stage: variable, confirmation: provisional}
+    evidence:
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: interview_task, date: '2026-08-31'}
+      - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: interview_task, date: '2026-09-03'}
+    note: Реальные задачи решаются, но пока с логическими коррекциями/подсказками; полный mock-chain без алгоритмической помощи не подтверждён.
