@@ -43,9 +43,12 @@ skills:
       - {ref: knowledge/interfaces.yaml, type: mixed}
       - {ref: progress.yaml, type: historical}
   go-core.type-assertion-switch:
-    current: {level: application, stage: independent, confirmation: provisional}
-    evidence: [{ref: progress.yaml, type: historical}]
-    note: Более свежий progress содержит успешные assertion/switch ответы, но отдельного повторения ещё нет.
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence:
+      - {ref: progress.yaml, type: historical}
+      - {ref: knowledge/interfaces.yaml, type: mixed}
+      - {ref: sessions/2026-09-09-type-assertion-switch-confirmation.md, type: explanation, date: '2026-09-09'}
+    note: После одного напоминания синтаксиса type assertion модель dynamic type была самостоятельно применена на новых примерах; type switch и тип v внутри case также подтверждены без подсказок.
   go-core.errors-mechanics:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
