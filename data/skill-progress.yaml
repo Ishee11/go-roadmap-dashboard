@@ -63,11 +63,12 @@ skills:
     note: Есть evidence по JSON validation и optional pointer semantics, но нет самостоятельной прикладной проверки encoding/json/DTO.
 
   concurrency.goroutine-lifecycle:
-    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: knowledge/concurrency.yaml, type: explanation}
       - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
-    note: Самостоятельно объяснено, что main не ждёт goroutine и Sleep не является синхронизацией; кодовая проверка не выполнена.
+      - {ref: sessions/2026-09-09-concurrency-atomic-waitgroup.md, type: coding, date: '2026-09-09'}
+    note: Самостоятельно объяснён lifecycle и без подсказок написан запуск 1000 goroutine с корректным ожиданием завершения.
   concurrency.goroutine-ownership-termination:
     current: {level: understanding, stage: explanation, confirmation: provisional}
     evidence:
@@ -78,24 +79,27 @@ skills:
     evidence:
       - {ref: knowledge/concurrency.yaml, type: reasoning}
       - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: reasoning, date: '2026-09-08'}
-    note: Самостоятельно найден риск потерянных increment и названы Mutex/atomic; самостоятельное исправление кодом ещё не подтверждено.
+    note: Самостоятельно найден риск потерянных increment и названы Mutex/atomic; самостоятельное исправление race без заранее заданного механизма ещё не подтверждено.
   concurrency.waitgroup:
-    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: knowledge/concurrency.yaml, type: explanation}
       - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
-    note: Понимает WaitGroup как ожидание завершения, не как задание порядка; требуется live coding.
+      - {ref: sessions/2026-09-09-concurrency-atomic-waitgroup.md, type: coding, date: '2026-09-09'}
+    note: Add/Done/Wait самостоятельно применены в рабочем конкурентном примере без пошаговых подсказок.
   concurrency.mutex:
     current: {level: understanding, stage: contextualization, confirmation: confirmed}
     evidence:
       - {ref: knowledge/concurrency.yaml, type: explanation}
       - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
+    note: Понимание критической секции есть, но самостоятельный код с Mutex ещё не подтверждён.
   concurrency.atomic:
-    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    current: {level: application, stage: template, confirmation: confirmed}
     evidence:
       - {ref: knowledge/concurrency.yaml, type: explanation}
       - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
-    note: Назван как подходящий инструмент для простых атомарных операций; нужна отдельная проверка границ применимости.
+      - {ref: sessions/2026-09-09-concurrency-atomic-waitgroup.md, type: coding, date: '2026-09-09'}
+    note: Самостоятельно реализован Counter на atomic.Int64 через Add/Load; выбор atomic против Mutex и границы применимости на вариативной задаче ещё не проверены.
 
   sql-postgresql.query-basics:
     current: {level: application, stage: variable, confirmation: confirmed}
