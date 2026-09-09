@@ -13,11 +13,11 @@ skills:
       - {ref: knowledge/structs.yaml, type: mixed}
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
   go-core.map-semantics:
-    current: {level: application, stage: variable, confirmation: confirmed}
+    current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: knowledge/maps.yaml, type: mixed}
       - {ref: sessions/2026-09-09-map-semantics-aliasing-copying.md, type: mixed, date: '2026-09-09'}
-    note: value-ok, range/order, key comparability и nil-vs-empty применены уверенно; на cold-check сначала ошибочно ожидал panic от delete(nilMap, key), затем nil-map semantics несколько раз воспроизведены корректно. Для application.independent нужен ещё один свежий cold-check без ошибки.
+    note: Финальная задача TakeScore самостоятельно решена через value-ok и delete с корректной nil-map semantics; предыдущая ошибка с delete(nilMap, key) не повторилась. MIN закрыт.
   go-core.map-aliasing-copying:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
