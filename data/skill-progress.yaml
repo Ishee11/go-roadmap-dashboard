@@ -138,9 +138,11 @@ skills:
     current: {level: understanding, stage: explanation, confirmation: confirmed}
     evidence: [{ref: knowledge/sql.yaml, type: explanation}]
   sql-postgresql.scan-methods:
-    current: {level: understanding, stage: contextualization, confirmation: provisional}
-    evidence: [{ref: knowledge/sql.yaml, type: explanation}]
-    note: Seq/Index/Bitmap объясняются самостоятельно; Index Only/Visibility Map получены после объяснения.
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/sql.yaml, type: explanation}
+      - {ref: sessions/2026-09-09-scan-methods-sliding-window-confirmation.md, type: explanation, date: '2026-09-09'}
+    note: Самостоятельно объяснены Index Scan, Seq Scan и Bitmap Heap Scan; условие покрытия Index Only Scan названо самостоятельно, роль Visibility Map/MVCC восстановлена после краткого напоминания. MIN подтвержден.
   sql-postgresql.explain-analyze:
     current: {level: analysis, stage: decomposition, confirmation: confirmed}
     evidence: [{ref: knowledge/sql.yaml, type: analysis}]
@@ -235,9 +237,11 @@ skills:
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
   live-coding.sliding-window:
-    current: {level: application, stage: template, confirmation: provisional}
-    evidence: [{ref: knowledge/algorithms-data-structures.yaml, type: coding}]
-    note: Fixed window доведено после объяснения; нужен новый пример без напоминания i-k/initial window.
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/algorithms-data-structures.yaml, type: coding}
+      - {ref: sessions/2026-09-09-scan-methods-sliding-window-confirmation.md, type: coding, date: '2026-09-09'}
+    note: Fixed sliding window самостоятельно реализован: первое окно и O(1) сдвиг через outgoing/incoming element. После одной коррекции best-state решение завершено; механика окна подтверждена.
   live-coding.complexity:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence: [{ref: sessions/2026-08-31-live-coding-basics-18.md, type: explanation, date: '2026-08-31'}]
