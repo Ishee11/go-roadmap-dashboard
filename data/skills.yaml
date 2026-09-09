@@ -1,0 +1,162 @@
+version: 1
+updated_at: '2026-09-09'
+objective: Go backend middle
+priority: P0
+
+level_scale:
+  knowledge.awareness: {rank: 10, label: 'Знание / осведомлённость'}
+  knowledge.identification: {rank: 20, label: 'Знание / идентификация ключевого'}
+  knowledge.recall: {rank: 30, label: 'Знание / воспроизведение'}
+  understanding.explanation: {rank: 40, label: 'Понимание / простое объяснение'}
+  understanding.comparison: {rank: 50, label: 'Понимание / сравнение'}
+  understanding.contextualization: {rank: 60, label: 'Понимание / контекстуализация'}
+  application.template: {rank: 70, label: 'Применение / использование шаблонов'}
+  application.variable: {rank: 80, label: 'Применение / вариативное использование'}
+  application.independent: {rank: 90, label: 'Применение / самостоятельное применение'}
+  analysis.decomposition: {rank: 100, label: 'Анализ / разделение на элементы'}
+  analysis.patterns: {rank: 110, label: 'Анализ / выявление закономерностей'}
+  analysis.defects: {rank: 120, label: 'Анализ / поиск недостатков'}
+  synthesis.combination: {rank: 130, label: 'Синтез / комбинация известных элементов'}
+  synthesis.adaptation: {rank: 140, label: 'Синтез / адаптация'}
+  synthesis.creation: {rank: 150, label: 'Синтез / создание уникального'}
+  evaluation.critique: {rank: 160, label: 'Оценка / критика'}
+  evaluation.optimization: {rank: 170, label: 'Оценка / оптимизация'}
+  evaluation.comparison: {rank: 180, label: 'Оценка / сравнение'}
+
+blocks:
+  - id: go-core
+    title: Go Core
+    priority: P0
+    groups:
+      - {id: values-data, title: 'Значения и структуры данных'}
+      - {id: structs-methods, title: 'Structs и методы'}
+      - {id: interfaces-errors, title: 'Interfaces и errors'}
+      - {id: transport-data, title: 'Transport data'}
+  - id: concurrency
+    title: Concurrency
+    priority: P0
+    groups:
+      - {id: goroutines, title: Goroutines}
+      - {id: shared-state, title: 'Shared state'}
+      - {id: channels, title: Channels}
+      - {id: patterns, title: 'Patterns и lifecycle'}
+  - id: sql-postgresql
+    title: SQL / PostgreSQL
+    priority: P0
+    groups:
+      - {id: querying, title: Querying}
+      - {id: indexing-plans, title: 'Indexing и plans'}
+      - {id: transactions-mvcc, title: 'Transactions и MVCC'}
+      - {id: maintenance, title: 'PostgreSQL maintenance'}
+      - {id: application-db, title: 'Application DB'}
+  - id: http-networks-api
+    title: HTTP / сети / API
+    priority: P0
+    groups:
+      - {id: networking, title: Networking}
+      - {id: http, title: HTTP}
+      - {id: reliability, title: Reliability}
+      - {id: api-rpc, title: 'API и RPC'}
+  - id: live-coding
+    title: Live coding / алгоритмы
+    priority: P0
+    groups:
+      - {id: foundations, title: 'Coding foundations'}
+      - {id: state-patterns, title: 'State modeling'}
+      - {id: patterns, title: 'Algorithm patterns'}
+      - {id: interview, title: 'Interview execution'}
+
+skills:
+  - {id: go-core.value-semantics, block: go-core, group: values-data, title: 'Value semantics', description: 'значения, указатели, копирование, aliasing', min: application.independent, target: analysis.defects}
+  - {id: go-core.slice-mechanics, block: go-core, group: values-data, title: 'Slice mechanics', description: 'len/cap, append, backing array', min: application.independent, target: analysis.defects}
+  - {id: go-core.map-semantics, block: go-core, group: values-data, title: 'Map semantics', description: 'zero value, value-ok, nil map, range, delete', min: application.independent, target: analysis.defects}
+  - {id: go-core.map-aliasing-copying, block: go-core, group: values-data, title: 'Map aliasing / copying', description: 'присваивание, shallow/deep copy, вложенные ссылочные значения', min: understanding.contextualization, target: analysis.defects}
+  - {id: go-core.map-task-tool, block: go-core, group: values-data, title: 'Map как инструмент задач', description: 'set, frequency map, grouping, index, lookup', min: application.independent, target: application.independent}
+  - {id: go-core.struct-semantics, block: go-core, group: structs-methods, title: 'Struct semantics', description: 'value/pointer, копирование, ссылочные поля', min: application.independent, target: analysis.defects}
+  - {id: go-core.receivers-method-set, block: go-core, group: structs-methods, title: 'Receivers и method set', description: 'value/pointer receiver, method set, реализация интерфейсов', min: application.independent, target: analysis.patterns}
+  - {id: go-core.embedding-promotion, block: go-core, group: structs-methods, title: 'Embedding / promotion', description: 'embedded fields, promoted fields/methods', min: understanding.comparison, target: application.variable}
+  - {id: go-core.interface-model, block: go-core, group: interfaces-errors, title: 'Interface model', description: 'dynamic type/value, nil interface, typed nil', min: application.independent, target: analysis.defects}
+  - {id: go-core.type-assertion-switch, block: go-core, group: interfaces-errors, title: 'Type assertion / type switch', description: 'assertion, value-ok, switch по dynamic type', min: application.independent, target: application.independent}
+  - {id: go-core.interface-design, block: go-core, group: interfaces-errors, title: 'Interface design', description: 'маленькие интерфейсы, consumer-side interfaces, лишняя абстракция', min: understanding.contextualization, target: evaluation.comparison}
+  - {id: go-core.errors-mechanics, block: go-core, group: interfaces-errors, title: 'Errors mechanics', description: 'wrapping, errors.Is/As, sentinel/custom errors', min: application.independent, target: analysis.defects}
+  - {id: go-core.error-contract-boundaries, block: go-core, group: interfaces-errors, title: 'Error contracts / boundaries', description: 'repository/use case/transport errors, mapping, логирование границ', min: application.variable, target: synthesis.combination}
+  - {id: go-core.defer, block: go-core, group: structs-methods, title: Defer, description: 'порядок выполнения, аргументы, cleanup', min: application.independent, target: analysis.defects}
+  - {id: go-core.panic-recover, block: go-core, group: interfaces-errors, title: 'Panic / recover', description: 'назначение, допустимые границы, отличие от обычного error', min: understanding.contextualization, target: analysis.defects}
+  - {id: go-core.json-dto, block: go-core, group: transport-data, title: 'JSON / DTO', description: 'encoding/json, DTO, pointer/value optional fields, transport/domain boundary', min: application.independent, target: analysis.defects}
+
+  - {id: concurrency.goroutine-lifecycle, block: concurrency, group: goroutines, title: 'Goroutine lifecycle', description: 'запуск, независимое выполнение, отсутствие автоматического ожидания', min: application.independent, target: analysis.defects}
+  - {id: concurrency.goroutine-ownership-termination, block: concurrency, group: goroutines, title: 'Goroutine ownership / завершение', description: 'владелец goroutine и условие завершения', min: understanding.contextualization, target: analysis.defects}
+  - {id: concurrency.goroutine-leaks, block: concurrency, group: goroutines, title: 'Goroutine leaks', description: 'причины утечек, зависшие send/receive, отмена', min: understanding.contextualization, target: analysis.defects}
+  - {id: concurrency.data-race, block: concurrency, group: shared-state, title: 'Data race', description: 'shared state, race condition, потерянные обновления', min: application.independent, target: analysis.defects}
+  - {id: concurrency.race-detector, block: concurrency, group: shared-state, title: 'Race detector', description: 'go test -race и интерпретация базового отчёта', min: application.template, target: application.independent}
+  - {id: concurrency.waitgroup, block: concurrency, group: shared-state, title: WaitGroup, description: 'Add/Done/Wait и корректный lifecycle', min: application.independent, target: analysis.defects}
+  - {id: concurrency.mutex, block: concurrency, group: shared-state, title: Mutex, description: 'критическая секция и защита shared state', min: application.independent, target: evaluation.comparison}
+  - {id: concurrency.rwmutex, block: concurrency, group: shared-state, title: RWMutex, description: 'read/write locking и реальные условия полезности', min: understanding.contextualization, target: evaluation.comparison}
+  - {id: concurrency.atomic, block: concurrency, group: shared-state, title: Atomic, description: 'простые атомарные операции и ограничения', min: understanding.contextualization, target: application.variable}
+  - {id: concurrency.channels-semantics, block: concurrency, group: channels, title: 'Channels semantics', description: 'buffered/unbuffered, send/receive, blocking', min: application.independent, target: analysis.defects}
+  - {id: concurrency.channel-lifecycle, block: concurrency, group: channels, title: 'Channel lifecycle', description: 'close, range, closed receive, send to closed, ownership закрытия', min: application.independent, target: analysis.defects}
+  - {id: concurrency.nil-directional-channels, block: concurrency, group: channels, title: 'Nil / directional channels', description: 'nil channel, receive-only и send-only channel', min: understanding.explanation, target: application.variable}
+  - {id: concurrency.select, block: concurrency, group: channels, title: Select, description: 'базовый select, блокировка, timeout/cancel ветки', min: application.independent, target: analysis.defects}
+  - {id: concurrency.context, block: concurrency, group: patterns, title: Context, description: 'propagation, cancel, deadline, Done, корректное распространение', min: application.independent, target: analysis.defects}
+  - {id: concurrency.deadlock, block: concurrency, group: shared-state, title: Deadlock, description: 'типовые причины и признаки', min: understanding.contextualization, target: analysis.defects}
+  - {id: concurrency.worker-pool, block: concurrency, group: patterns, title: 'Worker pool', description: 'producers/workers/results, завершение и отмена', min: application.variable, target: synthesis.combination}
+  - {id: concurrency.bounded-concurrency, block: concurrency, group: patterns, title: 'Bounded concurrency', description: 'ограничение числа одновременно выполняемых работ', min: understanding.contextualization, target: application.independent}
+  - {id: concurrency.backpressure, block: concurrency, group: patterns, title: Backpressure, description: 'producer/consumer imbalance, очередь, блокировка, политика ограничения', min: understanding.contextualization, target: analysis.patterns}
+  - {id: concurrency.graceful-shutdown, block: concurrency, group: patterns, title: 'Graceful shutdown', description: 'signal, context, остановка HTTP/background work, ожидание и timeout', min: application.template, target: synthesis.combination}
+
+  - {id: sql-postgresql.query-basics, block: sql-postgresql, group: querying, title: 'Query basics', description: 'SELECT, WHERE, ORDER BY, LIMIT, NULL semantics', min: application.independent, target: analysis.defects}
+  - {id: sql-postgresql.join-aggregation, block: sql-postgresql, group: querying, title: 'JOIN / aggregation', description: 'INNER/LEFT JOIN, GROUP BY, HAVING, агрегаты', min: application.independent, target: analysis.defects}
+  - {id: sql-postgresql.subqueries-cte, block: sql-postgresql, group: querying, title: 'Subqueries / CTE', description: 'подзапросы, correlated subquery, CTE, выбор формы запроса', min: application.variable, target: application.independent}
+  - {id: sql-postgresql.window-functions-distinct-on, block: sql-postgresql, group: querying, title: 'Window functions / DISTINCT ON', description: 'window functions, top-N/one-row-per-group, PostgreSQL DISTINCT ON', min: application.template, target: application.independent}
+  - {id: sql-postgresql.schema-constraints, block: sql-postgresql, group: application-db, title: 'Schema constraints', description: 'PK, FK, UNIQUE, NOT NULL, CHECK, базовое проектирование ограничений', min: application.independent, target: analysis.defects}
+  - {id: sql-postgresql.btree-composite-index-design, block: sql-postgresql, group: indexing-plans, title: 'B-tree / composite index design', description: 'порядок колонок, equality/range/order, соответствие реальным запросам', min: application.variable, target: evaluation.comparison}
+  - {id: sql-postgresql.partial-expression-indexes, block: sql-postgresql, group: indexing-plans, title: 'Partial / expression indexes', description: 'partial и expression indexes, подходящие сценарии', min: understanding.contextualization, target: application.independent}
+  - {id: sql-postgresql.scan-methods, block: sql-postgresql, group: indexing-plans, title: 'Scan methods', description: 'Seq Scan, Index Scan, Bitmap Heap Scan, Index Only Scan', min: understanding.contextualization, target: analysis.patterns}
+  - {id: sql-postgresql.explain-analyze, block: sql-postgresql, group: indexing-plans, title: 'EXPLAIN ANALYZE', description: 'estimates/actual, loops, filters, дорогие узлы, базовая диагностика плана', min: analysis.decomposition, target: analysis.defects}
+  - {id: sql-postgresql.physical-join-algorithms, block: sql-postgresql, group: indexing-plans, title: 'Physical JOIN algorithms', description: 'Nested Loop, Hash Join, Merge Join и условия естественного выбора', min: understanding.contextualization, target: analysis.patterns}
+  - {id: sql-postgresql.transactions, block: sql-postgresql, group: transactions-mvcc, title: Transactions, description: 'BEGIN/COMMIT/ROLLBACK, атомарность нескольких операций, transaction boundary', min: application.independent, target: analysis.defects}
+  - {id: sql-postgresql.isolation-anomalies, block: sql-postgresql, group: transactions-mvcc, title: 'Isolation / anomalies', description: 'READ COMMITTED, REPEATABLE READ, SERIALIZABLE и основные аномалии', min: understanding.contextualization, target: analysis.patterns}
+  - {id: sql-postgresql.mvcc-snapshots, block: sql-postgresql, group: transactions-mvcc, title: 'MVCC / snapshots', description: 'версии строк, snapshot, видимость, почему обычное чтение не блокируется writer', min: understanding.explanation, target: analysis.patterns}
+  - {id: sql-postgresql.row-locks, block: sql-postgresql, group: transactions-mvcc, title: 'Row locks', description: 'UPDATE lock, SELECT FOR UPDATE, read-check-write, атомарный условный UPDATE', min: application.variable, target: analysis.defects}
+  - {id: sql-postgresql.deadlocks, block: sql-postgresql, group: transactions-mvcc, title: Deadlocks, description: 'конфликтующий порядок lock acquisition, распознавание и предотвращение', min: understanding.contextualization, target: analysis.defects}
+  - {id: sql-postgresql.vacuum-analyze-autovacuum, block: sql-postgresql, group: maintenance, title: 'VACUUM / ANALYZE / autovacuum', description: 'dead tuples, reuse, planner statistics, long transactions, autovacuum', min: understanding.contextualization, target: analysis.patterns}
+  - {id: sql-postgresql.hot-fillfactor, block: sql-postgresql, group: maintenance, title: 'HOT / fillfactor', description: 'условия HOT update и компромисс свободного места страницы', min: null, target: understanding.contextualization}
+  - {id: sql-postgresql.pagination-n-plus-one, block: sql-postgresql, group: application-db, title: 'Pagination / N+1', description: 'offset/keyset pagination, N+1, способы устранения', min: application.independent, target: analysis.defects}
+  - {id: sql-postgresql.pgx-pool-transaction-boundary, block: sql-postgresql, group: application-db, title: 'pgx / pgxpool / transaction boundary', description: 'pool, query, context, транзакции, граница repository/use case', min: application.independent, target: synthesis.combination}
+
+  - {id: http-networks-api.request-path-layer-boundaries, block: http-networks-api, group: networking, title: 'Request path / layer boundaries', description: 'application -> socket/TCP -> IP -> link -> server и границы ответственности', min: understanding.contextualization, target: analysis.patterns}
+  - {id: http-networks-api.ip-ports-sockets, block: http-networks-api, group: networking, title: 'IP / ports / sockets', description: 'адрес, endpoint процесса, socket на практическом уровне', min: understanding.explanation, target: understanding.contextualization}
+  - {id: http-networks-api.ethernet-mtu-mss-details, block: http-networks-api, group: networking, title: 'Ethernet / MTU / MSS details', description: 'frame/packet/segment, MTU, MSS и типовые размеры', min: null, target: understanding.contextualization}
+  - {id: http-networks-api.dns, block: http-networks-api, group: networking, title: DNS, description: 'разрешение имени и базовая последовательность lookup -> connect', min: understanding.explanation, target: understanding.contextualization}
+  - {id: http-networks-api.tcp-connection-byte-stream, block: http-networks-api, group: networking, title: 'TCP connection / byte stream', description: 'handshake, connection, byte-stream, segmentation/retransmission', min: understanding.contextualization, target: analysis.patterns}
+  - {id: http-networks-api.tls-basics, block: http-networks-api, group: networking, title: 'TLS basics', description: 'место TLS между TCP и HTTP, сертификат/шифрование, общая последовательность', min: understanding.explanation, target: understanding.contextualization}
+  - {id: http-networks-api.http-message-model, block: http-networks-api, group: http, title: 'HTTP message model', description: 'request/response, headers, body, query/path, основные status codes', min: application.independent, target: analysis.defects}
+  - {id: http-networks-api.http-methods-idempotency, block: http-networks-api, group: http, title: 'HTTP methods / idempotency', description: 'GET/POST/PUT/PATCH/DELETE, safe/idempotent semantics, повтор запроса', min: application.variable, target: analysis.defects}
+  - {id: http-networks-api.http-error-status-contract, block: http-networks-api, group: http, title: 'HTTP error/status contract', description: 'выбор 2xx/4xx/5xx и mapping application errors на transport contract', min: application.independent, target: analysis.defects}
+  - {id: http-networks-api.rest-api-design, block: http-networks-api, group: api-rpc, title: 'REST / API design', description: 'ресурсы, URI, методы, DTO, совместимость контракта', min: application.variable, target: evaluation.comparison}
+  - {id: http-networks-api.net-http-handlers-middleware, block: http-networks-api, group: http, title: 'net/http handlers / middleware', description: 'parsing, response writing, middleware chain, transport/use case boundary', min: application.independent, target: synthesis.combination}
+  - {id: http-networks-api.authentication-authorization, block: http-networks-api, group: api-rpc, title: 'Authentication / authorization', description: 'authn/authz, token/session, проверка прав', min: application.variable, target: analysis.defects}
+  - {id: http-networks-api.request-context-propagation, block: http-networks-api, group: reliability, title: 'Request context propagation', description: 'r.Context, use case/DB/downstream, отмена', min: application.independent, target: analysis.defects}
+  - {id: http-networks-api.timeouts, block: http-networks-api, group: reliability, title: Timeouts, description: 'client/server/read/write/idle/downstream timeout, deadline propagation', min: application.variable, target: analysis.defects}
+  - {id: http-networks-api.keepalive-connection-pooling, block: http-networks-api, group: reliability, title: 'Keep-alive / connection pooling', description: 'переиспользование соединений, latency/resources и типовые проблемы', min: understanding.contextualization, target: analysis.patterns}
+  - {id: http-networks-api.retry-policy, block: http-networks-api, group: reliability, title: 'Retry policy', description: 'retryable/non-retryable, идемпотентность, backoff, side effects', min: application.variable, target: evaluation.comparison}
+  - {id: http-networks-api.request-correlation-id, block: http-networks-api, group: reliability, title: 'Request / correlation ID', description: 'генерация/пропагация ID и связь логов/трейсов', min: application.template, target: application.variable}
+  - {id: http-networks-api.grpc-basics, block: http-networks-api, group: api-rpc, title: 'gRPC basics', description: 'protobuf, unary RPC, deadlines, status codes, interceptors', min: application.template, target: application.independent}
+  - {id: http-networks-api.http-json-vs-grpc, block: http-networks-api, group: api-rpc, title: 'HTTP/JSON vs gRPC', description: 'contract/tooling/serialization/public API vs service-to-service', min: understanding.comparison, target: evaluation.comparison}
+
+  - {id: live-coding.basic-go-coding-automation, block: live-coding, group: foundations, title: 'Basic Go coding automation', description: 'for/range, условия, функции, индексы, append, make, slice/map без синтаксических затыков', min: application.independent, target: application.independent}
+  - {id: live-coding.one-pass-state-modeling, block: live-coding, group: state-patterns, title: 'One-pass state modeling', description: 'что из прошлого нужно хранить; current state vs best answer', min: application.variable, target: application.independent}
+  - {id: live-coding.state-lifecycle-indices, block: live-coding, group: state-patterns, title: 'State lifecycle / indices', description: 'инициализация, порядок обновления, off-by-one, первый/последний элемент', min: application.independent, target: analysis.defects}
+  - {id: live-coding.map-set-frequency-lookup, block: live-coding, group: patterns, title: 'Map / set / frequency / lookup', description: 'set, frequency map, complement lookup, grouping, deduplication', min: application.independent, target: analysis.patterns}
+  - {id: live-coding.strings-runes, block: live-coding, group: foundations, title: 'Strings / runes', description: 'byte vs rune, Unicode, преобразование и обход строк', min: application.independent, target: analysis.defects}
+  - {id: live-coding.two-pointers, block: live-coding, group: patterns, title: 'Two pointers', description: 'встречные/однонаправленные указатели и in-place задачи', min: application.variable, target: application.independent}
+  - {id: live-coding.sliding-window, block: live-coding, group: patterns, title: 'Sliding window', description: 'fixed/variable window, входящий/уходящий элемент, состояние окна', min: application.template, target: application.independent}
+  - {id: live-coding.stack-queue, block: live-coding, group: patterns, title: 'Stack / queue', description: 'LIFO/FIFO, типовые задачи, реализация на slice', min: application.template, target: application.independent}
+  - {id: live-coding.binary-search, block: live-coding, group: patterns, title: 'Binary search', description: 'инвариант границ, exact/lower-bound-подобные сценарии', min: application.template, target: application.independent}
+  - {id: live-coding.sorting, block: live-coding, group: patterns, title: Sorting, description: 'sort/slices, comparator, когда сортировка упрощает задачу', min: application.variable, target: analysis.patterns}
+  - {id: live-coding.prefix-sums, block: live-coding, group: patterns, title: 'Prefix sums', description: 'накопленная сумма и ответы по диапазонам', min: understanding.contextualization, target: application.independent}
+  - {id: live-coding.bfs-dfs-basics, block: live-coding, group: patterns, title: 'BFS / DFS basics', description: 'обход дерева/графа, visited, queue/stack/recursion', min: application.template, target: application.independent}
+  - {id: live-coding.dp-backtracking, block: live-coding, group: patterns, title: 'DP / backtracking', description: 'базовое распознавание состояния/перебора', min: null, target: application.template}
+  - {id: live-coding.complexity, block: live-coding, group: interview, title: Complexity, description: 'самостоятельно оценить time/space complexity своего решения', min: application.independent, target: evaluation.comparison}
+  - {id: live-coding.edge-cases-manual-verification, block: live-coding, group: interview, title: 'Edge cases / manual verification', description: 'пустой ввод, один элемент, границы, отрицательные значения, ручной прогон', min: application.independent, target: analysis.defects}
+  - {id: live-coding.interview-execution, block: live-coding, group: interview, title: 'Interview execution', description: 'уточнить условие, проговорить идею, написать без подсказки, проверить, объяснить сложность и код', min: application.independent, target: synthesis.adaptation}
