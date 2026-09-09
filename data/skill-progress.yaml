@@ -79,7 +79,8 @@ skills:
     evidence:
       - {ref: knowledge/concurrency.yaml, type: reasoning}
       - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: reasoning, date: '2026-09-08'}
-    note: Самостоятельно найден риск потерянных increment и названы Mutex/atomic; самостоятельное исправление race без заранее заданного механизма ещё не подтверждено.
+      - {ref: sessions/2026-09-09-concurrency-atomic-waitgroup.md, type: coding, date: '2026-09-09'}
+    note: Риск race понимается; в Mutex-задаче concurrent read/write был подсвечен вопросом, поэтому самостоятельный поиск race на новой формулировке ещё не подтверждён.
   concurrency.waitgroup:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
@@ -88,11 +89,18 @@ skills:
       - {ref: sessions/2026-09-09-concurrency-atomic-waitgroup.md, type: coding, date: '2026-09-09'}
     note: Add/Done/Wait самостоятельно применены в рабочем конкурентном примере без пошаговых подсказок.
   concurrency.mutex:
-    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
-      - {ref: knowledge/concurrency.yaml, type: explanation}
+      - {ref: knowledge/concurrency.yaml, type: mixed}
       - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
-    note: Понимание критической секции есть, но самостоятельный код с Mutex ещё не подтверждён.
+      - {ref: sessions/2026-09-09-concurrency-atomic-waitgroup.md, type: coding, date: '2026-09-09'}
+    note: Lock/Unlock и критическая секция применены корректно; механизм Mutex был задан условием, поэтому для application.independent нужна новая задача с самостоятельным выбором синхронизации.
+  concurrency.rwmutex:
+    current: {level: application, stage: template, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/concurrency.yaml, type: mixed}
+      - {ref: sessions/2026-09-09-concurrency-atomic-waitgroup.md, type: coding, date: '2026-09-09'}
+    note: Самостоятельно выбран RWMutex для concurrent read/write и корректно применены RLock/RUnlock; понимает read-heavy сценарий и отсутствие гарантированного выигрыша на коротких критических секциях.
   concurrency.atomic:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
