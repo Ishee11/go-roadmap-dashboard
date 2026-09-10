@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-09'
+updated_at: '2026-09-10'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -37,10 +37,14 @@ skills:
     evidence:
       - {ref: knowledge/structs.yaml, type: mixed}
       - {ref: progress.yaml, type: historical}
-    note: Обычные receiver-сценарии понятны, но formal method set в смешанном embedding ещё требовал коррекции.
+      - {ref: sessions/2026-09-10-receivers-method-set.md, type: mixed, date: '2026-09-10'}
+    note: Базовые и вариативные receiver/method-set сценарии устойчивы: T против *T, interface assignment, automatic address-taking, method value и method expression. До application.independent не повышен: в свежей проверке понадобилась коррекция границы между прямым вызовом c.Inc() и method expression Counter.Inc.
   go-core.embedding-promotion:
-    current: {level: understanding, stage: comparison, confirmation: confirmed}
-    evidence: [{ref: knowledge/structs.yaml, type: mixed}]
+    current: {level: application, stage: variable, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/structs.yaml, type: mixed}
+      - {ref: sessions/2026-09-10-receivers-method-set.md, type: reasoning, date: '2026-09-10'}
+    note: На свежих вариантах самостоятельно применены promotion для embedded T и *T, неоднозначность двух embedded методов и явный selector. Один смешанный случай с собственным методом внешнего типа потребовал коррекции; TARGET application.variable подтверждён.
   go-core.interface-model:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
