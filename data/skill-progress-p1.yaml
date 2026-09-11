@@ -1,0 +1,46 @@
+version: 1
+updated_at: '2026-09-11'
+skill_catalog: data/skills-p1.yaml
+priority: P1
+
+skills:
+  message-brokers.kafka-core-model:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-09-11-vk-kafka-sarama.md, type: reasoning, date: '2026-09-11'}
+      - {ref: knowledge/message-brokers.yaml, type: mixed, date: '2026-09-11'}
+    note: Самостоятельно объясняет partitioning, key/order, broker/leader/follower и риск нарушения порядка при изменении числа partitions.
+  message-brokers.kafka-producer-reliability:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-09-11-vk-kafka-sarama.md, type: reasoning, date: '2026-09-11'}
+      - {ref: knowledge/message-brokers.yaml, type: mixed, date: '2026-09-11'}
+    note: Уверенно рассуждает про acks/min.insync.replicas и metadata refresh; idempotent producer потребовал первоначальной подсказки, поэтому TARGET ещё далеко.
+  message-brokers.kafka-consumer-groups-offsets:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-09-11-vk-kafka-sarama.md, type: reasoning, date: '2026-09-11'}
+      - {ref: knowledge/message-brokers.yaml, type: mixed, date: '2026-09-11'}
+    note: Самостоятельно объяснил assignment partitions, idle consumers, rebalance и продолжение чтения по committed offset.
+  message-brokers.kafka-delivery-idempotency:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-09-11-vk-kafka-sarama.md, type: reasoning, date: '2026-09-11'}
+      - {ref: knowledge/message-brokers.yaml, type: mixed, date: '2026-09-11'}
+    note: Уверенно выводит redelivery после DB commit до offset commit, необходимость idempotent consumer и exactly-once business effect поверх at-least-once delivery.
+  message-brokers.kafka-retry-dlq-lag:
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
+    evidence:
+      - {ref: sessions/2026-09-11-vk-kafka-sarama.md, type: reasoning, date: '2026-09-11'}
+      - {ref: knowledge/message-brokers.yaml, type: mixed, date: '2026-09-11'}
+    note: Самостоятельно связал retry topic с backoff и разблокировкой main partition, диагностировал lag/hot partition и предел масштабирования числом partitions.
+  message-brokers.sarama-producer:
+    current: {level: application, stage: template, confirmation: provisional}
+    evidence:
+      - {ref: sessions/2026-09-11-vk-kafka-sarama.md, type: coding, date: '2026-09-11'}
+    note: Руками собран AsyncProducer с существенным сопровождением; для подтверждения MIN нужно восстановить каркас на новой попытке без пошаговой помощи.
+  message-brokers.sarama-consumer-group:
+    current: {level: knowledge, stage: identification, confirmation: provisional}
+    evidence:
+      - {ref: sessions/2026-09-11-vk-kafka-sarama.md, type: explanation, date: '2026-09-11'}
+    note: Понимает назначение groupID/topics и после объяснения — handler/claim/session; ConsumeClaim/MarkMessage/lifecycle ещё не воспроизводятся самостоятельно.
