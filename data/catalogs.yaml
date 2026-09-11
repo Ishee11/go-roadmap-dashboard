@@ -1,0 +1,12 @@
+version: 1
+updated_at: '2026-09-11'
+default_priority: P0
+layers:
+  - priority: P0
+    label: Core readiness
+    catalog: skills.yaml
+    progress: skill-progress.yaml
+  - priority: P1
+    label: Interview depth
+    catalog: skills-p1.yaml
+    progress: skill-progress-p1.yaml
