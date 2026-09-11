@@ -1,0 +1,93 @@
+version: 1
+updated_at: '2026-09-11'
+objective: Go backend middle
+priority: P1
+extends: data/skills.yaml
+
+blocks:
+  - id: message-brokers
+    title: Message Brokers / Kafka
+    priority: P1
+    groups:
+      - id: kafka-core
+        title: Kafka core
+      - id: consumer-reliability
+        title: Delivery и reliability
+      - id: operations
+        title: Operations / scaling
+      - id: go-clients
+        title: Go clients / Sarama
+      - id: advanced-patterns
+        title: Architecture patterns
+
+skills:
+  - id: message-brokers.kafka-core-model
+    block: message-brokers
+    group: kafka-core
+    title: Kafka core model
+    description: topic, partition, key, broker, leader/follower, ordering и partitioning
+    min: understanding.contextualization
+    target: analysis.patterns
+  - id: message-brokers.kafka-producer-reliability
+    block: message-brokers
+    group: kafka-core
+    title: Producer reliability
+    description: metadata, leader, acks, ISR, min.insync.replicas, retry и idempotent producer
+    min: understanding.contextualization
+    target: analysis.defects
+  - id: message-brokers.kafka-consumer-groups-offsets
+    block: message-brokers
+    group: consumer-reliability
+    title: Consumer groups / offsets
+    description: assignment, rebalance, committed offsets и предел параллелизма по partitions
+    min: understanding.contextualization
+    target: analysis.defects
+  - id: message-brokers.kafka-delivery-idempotency
+    block: message-brokers
+    group: consumer-reliability
+    title: Delivery semantics / idempotency
+    description: at-most-once, at-least-once, redelivery, idempotent consumer и exactly-once business effect
+    min: understanding.contextualization
+    target: synthesis.combination
+  - id: message-brokers.kafka-retry-dlq-lag
+    block: message-brokers
+    group: operations
+    title: Retry / DLQ / lag
+    description: retry topics, backoff, DLQ, poison messages, consumer lag, hot partitions и scaling
+    min: understanding.contextualization
+    target: analysis.patterns
+  - id: message-brokers.sarama-producer
+    block: message-brokers
+    group: go-clients
+    title: Sarama producer
+    description: ProducerMessage, key/value, AsyncProducer, Input, Errors/Successes и lifecycle
+    min: application.template
+    target: application.variable
+  - id: message-brokers.sarama-consumer-group
+    block: message-brokers
+    group: go-clients
+    title: Sarama ConsumerGroup
+    description: NewConsumerGroup, Consume, handler, claim, session, MarkMessage и rebalance lifecycle
+    min: application.template
+    target: application.variable
+  - id: message-brokers.outbox-inbox
+    block: message-brokers
+    group: advanced-patterns
+    title: Outbox / inbox
+    description: согласование DB и broker, transactional outbox, inbox/dedup и failure windows
+    min: understanding.contextualization
+    target: analysis.patterns
+  - id: message-brokers.schema-evolution
+    block: message-brokers
+    group: advanced-patterns
+    title: Schema evolution
+    description: совместимость событий, versioning, protobuf/JSON/Avro и безопасная эволюция producer/consumer
+    min: understanding.explanation
+    target: analysis.patterns
+  - id: message-brokers.broker-choice
+    block: message-brokers
+    group: advanced-patterns
+    title: Kafka vs RabbitMQ vs NATS
+    description: выбор брокера по модели нагрузки, routing, replay, ordering и operational trade-offs
+    min: understanding.comparison
+    target: evaluation.comparison
