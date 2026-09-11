@@ -3,36 +3,35 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
 
-const catalogSources = [
-  './data/skills.yaml',
-  './data/skills-p1.yaml',
-];
-const progressSources = [
-  './data/skill-progress.yaml',
-  './data/skill-progress-p1.yaml',
-];
-
 async function fetchYaml(path) {
   const response = await fetch(path);
   if (!response.ok) throw new Error(path);
   return parseYaml(await response.text());
 }
 
-const [catalogParts, progressParts] = await Promise.all([
-  Promise.all(catalogSources.map(fetchYaml)),
-  Promise.all(progressSources.map(fetchYaml)),
-]);
+const manifest = await fetchYaml('./data/catalogs.yaml');
+const layerData = await Promise.all((manifest.layers ?? []).map(async layer => {
+  const [layerCatalog, layerProgress] = await Promise.all([
+    fetchYaml(`./data/${layer.catalog}`),
+    fetchYaml(`./data/${layer.progress}`),
+  ]);
+  return { meta: layer, catalog: layerCatalog, progress: layerProgress };
+}));
 
-const baseCatalog = catalogParts[0];
+const baseLayer = layerData.find(layer => layer.meta.priority === manifest.default_priority) ?? layerData[0];
+if (!baseLayer) throw new Error('data/catalogs.yaml has no layers');
+
 const catalog = {
-  ...baseCatalog,
-  blocks: catalogParts.flatMap(part => part.blocks ?? []),
-  skills: catalogParts.flatMap(part => part.skills ?? []),
+  ...baseLayer.catalog,
+  blocks: layerData.flatMap(({ meta, catalog: part }) =>
+    (part.blocks ?? []).map(block => ({ ...block, priority: block.priority ?? meta.priority }))),
+  skills: layerData.flatMap(({ catalog: part }) => part.skills ?? []),
 };
 const progress = {
-  updated_at: progressParts.map(part => part.updated_at).filter(Boolean).sort().at(-1),
-  skills: Object.assign({}, ...progressParts.map(part => part.skills ?? {})),
+  updated_at: layerData.map(layer => layer.progress.updated_at).filter(Boolean).sort().at(-1),
+  skills: Object.assign({}, ...layerData.map(layer => layer.progress.skills ?? {})),
 };
+const priorityMeta = new Map(layerData.map(layer => [layer.meta.priority, layer.meta]));
 
 const rankOf = code => code ? (catalog.level_scale?.[code]?.rank ?? -1) : -1;
 const labelOf = code => code ? (catalog.level_scale?.[code]?.label ?? code) : 'Не проверено';
@@ -59,9 +58,9 @@ function evaluate(skill) {
 const evaluated = catalog.skills.map(evaluate);
 const byId = new Map(evaluated.map(x => [x.skill.id, x]));
 const blockOrder = new Map(catalog.blocks.map((b, i) => [b.id, i]));
-const priorities = [...new Set(catalog.blocks.map(block => block.priority ?? 'P0'))];
+const priorities = layerData.map(layer => layer.meta.priority);
 
-let priority = priorities.includes('P0') ? 'P0' : priorities[0];
+let priority = manifest.default_priority ?? priorities[0];
 let filter = 'all';
 let selectedBlockId = null;
 let selectedSkillId = null;
@@ -214,12 +213,13 @@ function render() {
     <span class="next-level">${labelOf(item.current)} → ${labelOf(item.skill.min)}</span>${status(item)}</button>`).join('');
 
   const priorityTabs = priorities.map(p => `<button data-priority="${p}" class="${priority === p ? 'active' : ''}">${p}</button>`).join('');
+  const scopeLabel = priorityMeta.get(priority)?.label ?? priority;
   const scopeDescription = priority === 'P0'
     ? 'Обязательный слой: сначала закрываем MIN по базовым навыкам Go backend middle.'
     : 'Следующий слой interview readiness: углубляем production-темы, не смешивая их с P0 readiness.';
 
   app.innerHTML = `
-    <header class="hero"><div><span class="eyebrow">${priority} · ${catalog.objective}</span><h1>Go Middle Readiness</h1><p>${scopeDescription}</p><div class="filters" style="justify-content:flex-start;margin-top:14px">${priorityTabs}</div></div><div class="updated">Данные: ${progress.updated_at}</div></header>
+    <header class="hero"><div><span class="eyebrow">${priority} · ${scopeLabel} · ${catalog.objective}</span><h1>Go Middle Readiness</h1><p>${scopeDescription}</p><div class="filters" style="justify-content:flex-start;margin-top:14px">${priorityTabs}</div></div><div class="updated">Данные: ${progress.updated_at}</div></header>
     <section class="metrics">
       <article class="metric primary"><div class="metric-row"><span class="eyebrow">${priority} MINIMUM</span><strong>${pct(minMet, required.length)}%</strong></div>${bar(pct(minMet, required.length))}<p><b>${minMet}</b> из <b>${required.length}</b> обязательных MIN подтверждены</p></article>
       <article class="metric"><span class="eyebrow">TARGET coverage</span><strong class="big">${targetMet}/${items.length}</strong><p>${pct(targetMet, items.length)}% навыков дошли до целевого уровня</p></article>
