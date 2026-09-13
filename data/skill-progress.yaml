@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-10'
+updated_at: '2026-09-13'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -229,21 +229,29 @@ skills:
     evidence:
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
       - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: coding, date: '2026-09-03'}
+      - {ref: sessions/2026-09-13-vk-tdocument-state-modeling.md, type: interview_task, date: '2026-09-13'}
+      - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
+    note: Простые left/right/current-state модели собираются после точечных наводок, но новая формулировка с несколькими инвариантами или нестандартными краями пока не решается без помощи; MIN application.variable ещё не подтверждён.
   live-coding.state-lifecycle-indices:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
       - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: coding, date: '2026-09-03'}
+      - {ref: sessions/2026-09-13-vk-tdocument-state-modeling.md, type: interview_task, date: '2026-09-13'}
+      - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
+    note: Свежая практика снова потребовала контрпримеров для первого/последнего участка, финализации после цикла и момента обновления left; MIN application.independent не закрыт.
   live-coding.map-set-frequency-lookup:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
       - {ref: knowledge/maps.yaml, type: coding}
   live-coding.strings-runes:
-    current: {level: application, stage: variable, confirmation: confirmed}
+    current: {level: application, stage: template, confirmation: confirmed}
     evidence:
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
+      - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
+    note: На Unicode-варианте самостоятельно введён []rune, но затем byte offset из range string был использован как индекс []rune; после указания исправлено на range по []rune. Свежая вариативная проверка показала, что MIN application.independent ещё не закрыт.
   live-coding.sliding-window:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
@@ -251,17 +259,23 @@ skills:
       - {ref: sessions/2026-09-09-scan-methods-sliding-window-confirmation.md, type: coding, date: '2026-09-09'}
     note: "Fixed sliding window самостоятельно реализован: первое окно и O(1) сдвиг через outgoing/incoming element. После одной коррекции best-state решение завершено; механика окна подтверждена."
   live-coding.complexity:
-    current: {level: understanding, stage: contextualization, confirmation: provisional}
-    evidence: [{ref: sessions/2026-08-31-live-coding-basics-18.md, type: explanation, date: '2026-08-31'}]
-    note: Сложность фиксировалась в разборе, но самостоятельное стабильное проговаривание ещё не подтверждено.
+    current: {level: application, stage: template, confirmation: provisional}
+    evidence:
+      - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: explanation, date: '2026-08-31'}
+      - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: explanation, date: '2026-09-13'}
+    note: Для собственной one-pass задачи про места самостоятельно сразу названы Time O(n), Space O(1). Это повышает evidence до application.template, но для MIN application.independent нужно стабильно учитывать все фазы и дополнительную память, например []rune.
   live-coding.edge-cases-manual-verification:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+      - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
+    note: Empty input был добавлен самостоятельно после контрпримера, но начальный/последний участок и Unicode mismatch потребовали внешних тестов; MIN application.independent не подтверждён.
   live-coding.interview-execution:
     current: {level: application, stage: variable, confirmation: provisional}
     evidence:
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: interview_task, date: '2026-08-31'}
       - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: interview_task, date: '2026-09-03'}
-    note: Реальные задачи решаются, но пока с логическими коррекциями/подсказками; полный mock-chain без алгоритмической помощи не подтверждён.
+      - {ref: sessions/2026-09-13-vk-tdocument-state-modeling.md, type: interview_task, date: '2026-09-13'}
+      - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: interview_task, date: '2026-09-13'}
+    note: Реальные задачи доводятся до корректного решения, но свежие one-pass задачи всё ещё требуют точечных контрпримеров и коррекций state lifecycle; полный mock-chain без алгоритмической помощи не подтверждён.
