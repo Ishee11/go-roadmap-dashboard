@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-13'
+updated_at: '2026-09-15'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -225,13 +225,14 @@ skills:
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
   live-coding.one-pass-state-modeling:
-    current: {level: application, stage: template, confirmation: confirmed}
+    current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
       - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: coding, date: '2026-09-03'}
       - {ref: sessions/2026-09-13-vk-tdocument-state-modeling.md, type: interview_task, date: '2026-09-13'}
       - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
-    note: Простые left/right/current-state модели собираются после точечных наводок, но новая формулировка с несколькими инвариантами или нестандартными краями пока не решается без помощи; MIN application.variable ещё не подтверждён.
+      - {ref: sessions/2026-09-15-live-coding-per-key-min-max-state.md, type: coding, date: '2026-09-15'}
+    note: На контрольной ступени per-key min/max две числовые границы реализованы корректно; после одной концептуальной подсказки Event отделён от накопленного State. application.variable подтверждён для простого multi-boundary state. Для independent остаётся TDocument-like случай, где у min/max есть разные связанные поля.
   live-coding.state-lifecycle-indices:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
