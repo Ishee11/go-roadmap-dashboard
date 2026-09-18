@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-09-18-1';
+const DATA_VERSION = '2026-09-18-2';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -26,7 +26,10 @@ async function fetchYaml(path) {
   }
 }
 
-const manifest = await fetchYaml('./data/catalogs.yaml');
+const [manifest, experienceData] = await Promise.all([
+  fetchYaml('./data/catalogs.yaml'),
+  fetchYaml('./data/experience.yaml'),
+]);
 const layerData = await Promise.all((manifest.layers ?? []).map(async layer => {
   const [layerCatalog, layerProgress] = await Promise.all([
     fetchYaml(`./data/${layer.catalog}`),
@@ -183,6 +186,51 @@ function visible(item) {
   return true;
 }
 
+function experienceStatusMeta(code) {
+  if (code === 'retained') return ['Закреплено', 'target'];
+  if (code === 'demonstrated') return ['Продемонстрировано', 'min'];
+  if (code === 'learning') return ['В изучении', 'confirm'];
+  return ['Не проверено', 'gap'];
+}
+
+function experienceStatus(code) {
+  const [label, cls] = experienceStatusMeta(code);
+  return `<span class="status ${cls}">${label}</span>`;
+}
+
+function experienceHtml() {
+  const projects = experienceData?.projects ?? [];
+  if (!projects.length) return '';
+
+  const projectsHtml = projects.map(project => {
+    const items = project.items ?? [];
+    const demonstrated = items.filter(item => ['demonstrated', 'retained'].includes(item.status)).length;
+    const retained = items.filter(item => item.status === 'retained').length;
+    const rows = items.map(item => `
+      <article class="experience-item">
+        <div class="experience-main">
+          <div class="experience-title"><strong>${item.title}</strong>${experienceStatus(item.status)}</div>
+          <p>${item.summary ?? ''}</p>
+          <div class="experience-target"><span class="label">Практический таргет</span><p>${item.target ?? ''}</p></div>
+        </div>
+        ${item.source_ref ? `<a class="experience-link" href="${privateRepoBase}${item.source_ref}" target="_blank" rel="noreferrer">source</a>` : ''}
+      </article>`).join('');
+
+    return `<article class="experience-project">
+      <div class="experience-project-head">
+        <div><span class="eyebrow">${project.company ?? 'Experience'}</span><h3>${project.title}</h3><p>${project.description ?? ''}</p></div>
+        <div class="experience-counters"><span>demonstrated <b>${demonstrated}/${items.length}</b></span><span>retained <b>${retained}/${items.length}</b></span></div>
+      </div>
+      <div class="experience-list">${rows}</div>
+    </article>`;
+  }).join('');
+
+  return `<section class="section card experience-section" style="padding:24px">
+    <div class="section-head"><div><span class="eyebrow">Experience readiness</span><h2 class="section-title">Заявляемый опыт → реальные навыки</h2></div><p>Все точки начинаются с «Не проверено». Статус меняется только после практической проверки.</p></div>
+    <div class="experience-projects">${projectsHtml}</div>
+  </section>`;
+}
+
 function render() {
   ensureSelection();
 
@@ -253,6 +301,7 @@ function render() {
       </aside>
     </section>
     <section class="section card" style="padding:24px"><div class="section-head"><div><span class="eyebrow">Next · ${priority}</span><h2 class="section-title">Ближайшие gaps</h2></div><p>Сначала короткие подтверждения, затем навыки, которые ближе всего к MIN.</p></div><div class="next-list">${nextHtml || '<p style="color:var(--muted)">Все обязательные MIN этого слоя закрыты.</p>'}</div></section>
+    ${experienceHtml()}
     <footer>Публичная read-only визуализация. Source of truth остаётся в private learning repository; P0 и P1 считаются независимо из опубликованных YAML.</footer>`;
 
   app.querySelectorAll('[data-priority]').forEach(btn => btn.addEventListener('click', () => {
