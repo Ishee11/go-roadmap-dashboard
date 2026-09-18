@@ -83,3 +83,37 @@ projects:
         target: Реализовать batch update на Go + PostgreSQL и объяснить выигрыш, транзакции, блокировки, MVCC, WAL и влияние индексов.
         source_ref: experience/agima-project-2/03-batch-updates.md
 
+  - id: mts-dsp
+    company: МТС
+    title: DSP — контур обработки событий
+    description: Практические таргеты из опыта переработки Kafka event processing: изоляция потоков, recovery, DLQ и корректность at-least-once доставки.
+    source_ref: experience/mts-dsp/README.md
+    items:
+      - id: kafka-flow-isolation
+        title: Разделение Kafka-потоков
+        status: not_tested
+        summary: Отдельные impression/click/conversion топики и consumer-профили вместо общего потока.
+        target: Самостоятельно реализовать многопоточный Kafka-контур на Go с маршрутизацией, consumer groups, partitioning и измерением lag/throughput.
+        source_ref: experience/mts-dsp/01-kafka-flow-isolation.md
+
+      - id: retry-recovery
+        title: Retry-контур и controlled recovery
+        status: not_tested
+        summary: Отдельные *.retry потоки с ограниченным темпом восстановления и счётчиком попыток.
+        target: Самостоятельно реализовать retryable/non-retryable классификацию, retry topic, backoff/rate limiting и отдельный retry-consumer.
+        source_ref: experience/mts-dsp/02-retry-recovery.md
+
+      - id: dlq-replay
+        title: DLQ и controlled replay
+        status: not_tested
+        summary: Отдельные DLQ по типам событий, диагностический envelope и управляемый replay.
+        target: Реализовать DLQ handler, классификацию ошибок и безопасный replay / manual investigation.
+        source_ref: experience/mts-dsp/03-dlq-replay.md
+
+      - id: at-least-once-idempotency
+        title: At-least-once, offsets и идемпотентность
+        status: not_tested
+        summary: Commit offset только после надёжного publish; повторная доставка и downstream idempotency по стабильному event key.
+        target: Самостоятельно реализовать pipeline process → publish → commit и проверить аварийные сценарии, дубли и идемпотентное применение.
+        source_ref: experience/mts-dsp/04-at-least-once-idempotency.md
+
