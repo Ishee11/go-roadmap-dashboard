@@ -35,13 +35,13 @@ skills:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence: [{ref: knowledge/structs.yaml, type: mixed}]
   go-core.receivers-method-set:
-    current: {level: application, stage: variable, confirmation: confirmed}
+    current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: knowledge/structs.yaml, type: mixed}
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-10-receivers-method-set.md, type: mixed, date: '2026-09-10'}
       - {ref: sessions/2026-09-18-receivers-method-set-embedding-typed-nil.md, type: reasoning, date: '2026-09-18'}
-    note: 'База T/*T, interface assignment и automatic address-taking устойчива. 2026-09-18 method values и method expressions закреплены: самостоятельно различены Counter.Value, (*Counter).Value и (*Counter).Inc; граница Counter.Inc была восстановлена после направляющих вопросов. Оставить application.variable: для independent нужна свежая формулировка без подсказок.'
+    note: 'MIN закрыт 2026-09-18. После разбора границы direct call vs method expression Степан на свежем no-hint примере Meter самостоятельно и без ошибок классифицировал Meter.Read, (*Meter).Read, Meter.Reset и (*Meter).Reset с корректными function signatures. application.independent confirmed.'
   go-core.embedding-promotion:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
