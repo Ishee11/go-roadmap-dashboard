@@ -68,12 +68,15 @@ skills:
     evidence:
       - {ref: knowledge/errors.yaml, type: mixed}
       - {ref: progress.yaml, type: historical}
-    note: Логика Is/As/wrapping сильная, но в самостоятельном коде были исправления синтаксиса и приёмника errors.As.
+      - {ref: sessions/2026-09-18-errors-mechanics-diagnostic.md, type: coding, date: '2026-09-18'}
+    note: Логика Is/As/wrapping подтверждена на свежем коде: handleError написан корректно без логических ошибок. application.independent пока не закрыт, потому что синтаксис target для errors.As не был восстановлен из памяти и потребовал отдельного объяснения.
   go-core.error-contract-boundaries:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
       - {ref: knowledge/errors.yaml, type: reasoning}
       - {ref: progress.yaml, type: historical}
+      - {ref: sessions/2026-09-18-errors-mechanics-diagnostic.md, type: reasoning, date: '2026-09-18'}
+    note: MIN application.variable сохраняется. После объяснения цепочки repository -> use case -> handler корректно определено, что storage-specific ошибки должны быть изолированы в repository; самостоятельный перенос модели без объяснения ещё не проверен.
   go-core.json-dto:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence: [{ref: progress.yaml, type: historical}]
