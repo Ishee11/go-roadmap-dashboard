@@ -86,7 +86,7 @@ projects:
   - id: mts-dsp
     company: МТС
     title: DSP — контур обработки событий
-    description: Практические таргеты из опыта переработки Kafka event processing: изоляция потоков, recovery, DLQ и корректность at-least-once доставки.
+    description: "Практические таргеты из опыта переработки Kafka event processing: изоляция потоков, recovery, DLQ и корректность at-least-once доставки."
     source_ref: experience/mts-dsp/README.md
     items:
       - id: kafka-flow-isolation
