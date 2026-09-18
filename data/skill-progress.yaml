@@ -239,7 +239,7 @@ skills:
       - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
       - {ref: sessions/2026-09-16-live-coding-state-modeling-aggregation.md, type: coding, date: '2026-09-16'}
       - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: coding, date: '2026-09-17'}
-    note: Application.variable подтверждён. На 2026-09-17 в двух новых формулировках самостоятельно выделены оба слоя aggregation -> best, а BestRegions написана целиком. До independent не повышать: в третьей модели потребовалась коррекция, чтобы объединить TotalAmount и TotalCount в один State; complexity вложенного прохода также потребовала подсказки.
+    note: 'Application.variable подтверждён. На 2026-09-17 в двух новых формулировках самостоятельно выделены оба слоя aggregation -> best, а BestRegions написана целиком. До independent не повышать: в третьей модели потребовалась коррекция, чтобы объединить TotalAmount и TotalCount в один State; complexity вложенного прохода также потребовала подсказки.'
   live-coding.state-lifecycle-indices:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
