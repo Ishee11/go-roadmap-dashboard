@@ -1,0 +1,57 @@
+version: 1
+updated_at: '2026-09-18'
+status_scale:
+  not_tested:
+    label: Не проверено
+    rank: 0
+  learning:
+    label: В изучении
+    rank: 1
+  demonstrated:
+    label: Продемонстрировано
+    rank: 2
+  retained:
+    label: Закреплено
+    rank: 3
+
+projects:
+  - id: agima-project-1
+    company: АГИМА
+    title: Первый проект — CRM ветеринарных клиник
+    description: Практические таргеты, вытекающие из опыта разработки продуктовой CRM.
+    source_ref: experience/agima-project-1/README.md
+    items:
+      - id: crm-business-logic
+        title: Бизнес-логика CRM
+        status: not_tested
+        summary: Сделки, статусы, задачи, контакты и история изменений.
+        target: Самостоятельно спроектировать и реализовать аналогичный фрагмент backend-системы с use cases, PostgreSQL, транзакциями, валидацией и тестами.
+        source_ref: experience/agima-project-1/01-crm-business-logic.md
+
+      - id: rbac-audit
+        title: RBAC и аудит действий
+        status: not_tested
+        summary: Permissions/actions вместо прямых проверок ролей; аудит бизнес-действий.
+        target: Самостоятельно реализовать RBAC-модель и аудит, встроить проверки в приложение и покрыть ключевые сценарии тестами.
+        source_ref: experience/agima-project-1/02-rbac-audit.md
+
+      - id: idempotent-leads
+        title: Идемпотентный приём лидов
+        status: not_tested
+        summary: UNIQUE(source, external_id), INSERT и обработка конфликта как повторной доставки.
+        target: Реализовать идемпотентный HTTP-сценарий на Go + PostgreSQL, включая конкурентные запросы и тестирование.
+        source_ref: experience/agima-project-1/03-idempotent-leads.md
+
+      - id: rabbitmq
+        title: Асинхронная интеграция через RabbitMQ
+        status: not_tested
+        summary: CRM как producer; публикация события после успешного бизнес-сценария.
+        target: Поднять RabbitMQ, написать producer на Go, настроить exchange/routing key и корректно разобрать ошибки брокера.
+        source_ref: experience/agima-project-1/04-rabbitmq.md
+
+      - id: external-integrations
+        title: Интеграции CRM с внешними системами
+        status: not_tested
+        summary: Входящие лиды с сайта, рекламы, колл-центра и партнёрских систем.
+        target: Требует дальнейшей декомпозиции после уточнения конкретных интеграционных сценариев.
+        source_ref: experience/agima-project-1/05-external-integrations.md
