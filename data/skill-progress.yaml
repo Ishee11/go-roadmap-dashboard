@@ -77,11 +77,6 @@ skills:
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-18-errors-mechanics-diagnostic.md, type: reasoning, date: '2026-09-18'}
     note: MIN application.variable сохраняется. После объяснения цепочки repository -> use case -> handler корректно определено, что storage-specific ошибки должны быть изолированы в repository; самостоятельный перенос модели без объяснения ещё не проверен.
-  go-core.defer:
-    current: {level: application, stage: variable, confirmation: confirmed}
-    evidence:
-      - {ref: sessions/2026-09-18-defer-diagnostic.md, type: reasoning, date: '2026-09-18'}
-    note: Правильно применены LIFO, момент вычисления аргументов defer и closure capture; на defer + named return первоначально допущена ошибка и правило восстановлено после коррекции. В следующем смешанном примере результат 15 определён верно. MIN application.independent пока не закрыт; cleanup-паттерн отдельно не проверен.
   go-core.json-dto:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence: [{ref: progress.yaml, type: historical}]
