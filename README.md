@@ -7,9 +7,12 @@ The private repository `Ishee11/go-learning-roadmap` remains the source of truth
 - the static dashboard UI;
 - `data/catalogs.yaml` — manifest of priority layers shown by the dashboard;
 - `data/skills.yaml` and `data/skill-progress.yaml` — public P0 catalog/progress;
-- `data/skills-p1.yaml` and `data/skill-progress-p1.yaml` — public P1 catalog/progress.
+- `data/skills-p1.yaml` and `data/skill-progress-p1.yaml` — public P1 catalog/progress;
+- `data/experience.yaml` — public snapshot of experience-based practical targets and their current status.
 
 The dashboard uses one shared skill-level scale, but calculates readiness separately for each priority. P1 gaps therefore do not reduce the P0 readiness percentage.
+
+Experience readiness is shown as a separate section. It tracks whether skills implied by interview experience stories are not tested, being learned, demonstrated, or retained. These statuses do not automatically inherit progress from the general roadmap.
 
 Adding a future P2/P3 layer should be data-driven: create the corresponding catalog/progress YAML files and register them in `data/catalogs.yaml`; the dashboard does not need a new hard-coded priority list.
 
@@ -27,4 +30,4 @@ No build step, backend, database, or GitHub Actions are required. The site reads
 
 ## Updating
 
-After a learning session, update the private source of truth first. Then sync only the intentionally public manifest/catalog/progress snapshots into `data/` here.
+After a learning session, update the private source of truth first. Then sync only the intentionally public manifest/catalog/progress snapshots into `data/` here. Experience targets are synced separately into `data/experience.yaml`.
