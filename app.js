@@ -2,11 +2,28 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
+const DATA_VERSION = '2026-09-18-1';
+
+function showLoadError(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  app.innerHTML = `<div class="loading">Не удалось загрузить карту прогресса: ${message}</div>`;
+}
+
+window.addEventListener('unhandledrejection', event => {
+  showLoadError(event.reason);
+});
 
 async function fetchYaml(path) {
-  const response = await fetch(path);
-  if (!response.ok) throw new Error(path);
-  return parseYaml(await response.text());
+  try {
+    const url = new URL(path, window.location.href);
+    url.searchParams.set('v', DATA_VERSION);
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+    return parseYaml(await response.text());
+  } catch (error) {
+    showLoadError(error);
+    throw error;
+  }
 }
 
 const manifest = await fetchYaml('./data/catalogs.yaml');
