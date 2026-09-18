@@ -55,3 +55,31 @@ projects:
         summary: Входящие лиды с сайта, рекламы, колл-центра и партнёрских систем.
         target: Требует дальнейшей декомпозиции после уточнения конкретных интеграционных сценариев.
         source_ref: experience/agima-project-1/05-external-integrations.md
+
+  - id: agima-project-2
+    company: АГИМА
+    title: Второй проект — сервис генерации выгрузок
+    description: Практические таргеты из опыта фоновой обработки длительных генераций и оптимизации PostgreSQL.
+    source_ref: experience/agima-project-2/README.md
+    items:
+      - id: postgres-task-queue
+        title: Фоновая очередь задач в PostgreSQL
+        status: not_tested
+        summary: Разделение HTTP-приёма запроса и длительной генерации через таблицу tasks и фоновые задачи.
+        target: Самостоятельно реализовать очередь задач на Go + PostgreSQL со state machine, конкурентным захватом, ретраями, идемпотентностью и тестами.
+        source_ref: experience/agima-project-2/01-postgres-task-queue.md
+
+      - id: postgres-indexes
+        title: Индексы под планировщик и отчёты
+        status: not_tested
+        summary: Partial index для waiting-задач и составной индекс по status, created_at для отчётных запросов.
+        target: Самостоятельно выбрать и проверить индексы через EXPLAIN / EXPLAIN ANALYZE, объяснить порядок колонок, селективность и цену индексов.
+        source_ref: experience/agima-project-2/02-postgres-indexes.md
+
+      - id: batch-updates
+        title: Batch-обновления задач
+        status: not_tested
+        summary: Замена множества отдельных UPDATE на пакетное обновление группы строк.
+        target: Реализовать batch update на Go + PostgreSQL и объяснить выигрыш, транзакции, блокировки, MVCC, WAL и влияние индексов.
+        source_ref: experience/agima-project-2/03-batch-updates.md
+
