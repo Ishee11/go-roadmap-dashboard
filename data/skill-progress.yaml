@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-15'
+updated_at: '2026-09-18'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -23,12 +23,14 @@ skills:
     evidence:
       - {ref: knowledge/maps.yaml, type: mixed}
       - {ref: sessions/2026-09-09-map-semantics-aliasing-copying.md, type: coding, date: '2026-09-09'}
-    note: Самостоятельно различил mutation общей map и local reassignment, объяснил aliasing после присваивания, написал независимую копию map[string]int и после разбора deep copy самостоятельно повторил копирование вложенных []int. Следующая проверка — map[K]*Struct и перенос модели на новый пример.
+      - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: coding, date: '2026-09-17'}
+    note: В BestRegions pointer-state во вложенных map использован корректно без ошибки локальной копии, но отдельная проверка map[K]Struct vs map[K]*Struct ещё нужна; stage не повышать.
   go-core.map-task-tool:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: knowledge/maps.yaml, type: coding}
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
+      - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: coding, date: '2026-09-17'}
   go-core.struct-semantics:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence: [{ref: knowledge/structs.yaml, type: mixed}]
@@ -38,18 +40,21 @@ skills:
       - {ref: knowledge/structs.yaml, type: mixed}
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-10-receivers-method-set.md, type: mixed, date: '2026-09-10'}
-    note: 'Базовые и вариативные receiver/method-set сценарии устойчивы: T против *T, interface assignment, automatic address-taking, method value и method expression. До application.independent не повышен: в свежей проверке понадобилась коррекция границы между прямым вызовом c.Inc() и method expression Counter.Inc.'
+      - {ref: sessions/2026-09-18-receivers-method-set-embedding-typed-nil.md, type: reasoning, date: '2026-09-18'}
+    note: 'База T/*T, interface assignment и automatic address-taking устойчива, но на свежей сложной серии были коррекции по non-addressable temporary, прямому вызову через *C и выбору метода через interface. Оставить application.variable; следующая проверка — method values/method expressions.'
   go-core.embedding-promotion:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
       - {ref: knowledge/structs.yaml, type: mixed}
       - {ref: sessions/2026-09-10-receivers-method-set.md, type: reasoning, date: '2026-09-10'}
-    note: На свежих вариантах самостоятельно применены promotion для embedded T и *T, неоднозначность двух embedded методов и явный selector. Один смешанный случай с собственным методом внешнего типа потребовал коррекции; TARGET application.variable подтверждён.
+      - {ref: sessions/2026-09-18-receivers-method-set-embedding-typed-nil.md, type: reasoning, date: '2026-09-18'}
+    note: На 2026-09-18 подтверждены embedded T/*T, promotion и shadowing; потребовались коррекции по compile-time ambiguity и приоритету меньшей embedding depth. TARGET application.variable сохраняется.
   go-core.interface-model:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: knowledge/interfaces.yaml, type: mixed}
-      - {ref: progress.yaml, type: historical}
+      - {ref: progress.yaml, type: historical}      - {ref: sessions/2026-09-18-receivers-method-set-embedding-typed-nil.md, type: reasoning, date: '2026-09-18'}
+
   go-core.type-assertion-switch:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
@@ -231,8 +236,9 @@ skills:
       - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: coding, date: '2026-09-03'}
       - {ref: sessions/2026-09-13-vk-tdocument-state-modeling.md, type: interview_task, date: '2026-09-13'}
       - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
-      - {ref: sessions/2026-09-15-live-coding-per-key-min-max-state.md, type: coding, date: '2026-09-15'}
-    note: На контрольной ступени per-key min/max две числовые границы реализованы корректно; после одной концептуальной подсказки Event отделён от накопленного State. application.variable подтверждён для простого multi-boundary state. Для independent остаётся TDocument-like случай, где у min/max есть разные связанные поля.
+      - {ref: sessions/2026-09-16-live-coding-state-modeling-aggregation.md, type: coding, date: '2026-09-16'}
+      - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: coding, date: '2026-09-17'}
+    note: Application.variable подтверждён. На 2026-09-17 в двух новых формулировках самостоятельно выделены оба слоя aggregation -> best, а BestRegions написана целиком. До independent не повышать: в третьей модели потребовалась коррекция, чтобы объединить TotalAmount и TotalCount в один State; complexity вложенного прохода также потребовала подсказки.
   live-coding.state-lifecycle-indices:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
@@ -246,6 +252,7 @@ skills:
     evidence:
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
       - {ref: knowledge/maps.yaml, type: coding}
+      - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: coding, date: '2026-09-17'}
   live-coding.strings-runes:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
@@ -264,14 +271,16 @@ skills:
     evidence:
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: explanation, date: '2026-08-31'}
       - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: explanation, date: '2026-09-13'}
-    note: Для собственной one-pass задачи про места самостоятельно сразу названы Time O(n), Space O(1). Это повышает evidence до application.template, но для MIN application.independent нужно стабильно учитывать все фазы и дополнительную память, например []rune.
+      - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: explanation, date: '2026-09-17'}
+    note: В BestRegions сначала названы O(n^2), затем O(n log n); O(n) распознано после подсказки, что сумма размеров всех внутренних map ограничена числом уникальных пар <= n. Следующая проверка должна отдельно закрепить, что вложенные циклы не означают автоматически O(n^2).
   live-coding.edge-cases-manual-verification:
     current: {level: application, stage: template, confirmation: confirmed}
     evidence:
       - {ref: knowledge/algorithms-data-structures.yaml, type: mixed}
       - {ref: sessions/2026-08-31-live-coding-basics-18.md, type: coding, date: '2026-08-31'}
       - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: coding, date: '2026-09-13'}
-    note: Empty input был добавлен самостоятельно после контрпримера, но начальный/последний участок и Unicode mismatch потребовали внешних тестов; MIN application.independent не подтверждён.
+      - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: reasoning, date: '2026-09-17'}
+    note: В BestRegions корректно разобрано, что edge case с отрицательным Amount нельзя автоматически навязывать доменной задаче; при отсутствии гарантии non-negative безопаснее инициализировать best первой реальной группой через value, ok. Для MIN independent всё ещё нужна самостоятельная системная проверка edge cases.
   live-coding.interview-execution:
     current: {level: application, stage: variable, confirmation: provisional}
     evidence:
@@ -279,4 +288,5 @@ skills:
       - {ref: sessions/2026-09-03-live-coding-state-tracking.md, type: interview_task, date: '2026-09-03'}
       - {ref: sessions/2026-09-13-vk-tdocument-state-modeling.md, type: interview_task, date: '2026-09-13'}
       - {ref: sessions/2026-09-13-live-coding-runs-and-boundaries.md, type: interview_task, date: '2026-09-13'}
-    note: Реальные задачи доводятся до корректного решения, но свежие one-pass задачи всё ещё требуют точечных контрпримеров и коррекций state lifecycle; полный mock-chain без алгоритмической помощи не подтверждён.
+      - {ref: sessions/2026-09-17-live-coding-aggregation-best-regions.md, type: interview_task, date: '2026-09-17'}
+    note: BestRegions доведена до рабочего решения с самостоятельной реализацией multi-stage aggregation и tie-break. Полный mock-chain до independent пока не закрыт из-за одной коррекции модели State и подсказок по complexity.
