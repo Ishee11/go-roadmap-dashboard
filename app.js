@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-09-18-2';
+const DATA_VERSION = '2026-09-18-3';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
