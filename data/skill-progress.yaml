@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-18'
+updated_at: '2026-09-20'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -84,9 +84,11 @@ skills:
       - {ref: sessions/2026-09-18-defer-diagnostic.md, type: mixed, date: '2026-09-18'}
     note: 'Расширенная диагностика 2026-09-18: самостоятельно подтверждены LIFO, eager evaluation аргументов defer, closure capture, deferred method receivers, базовый file cleanup и mutex Unlock. Ошибки сохраняются в named return semantics, loop-scoped cleanup, Close error propagation и выборе конкретного HTTP cleanup; transaction Rollback pattern потребовал объяснения. Текущий уровень application.variable/confirmed, MIN application.independent не закрыт.'
   go-core.json-dto:
-    current: {level: understanding, stage: contextualization, confirmation: provisional}
-    evidence: [{ref: progress.yaml, type: historical}]
-    note: Есть evidence по JSON validation и optional pointer semantics, но нет самостоятельной прикладной проверки encoding/json/DTO.
+    current: {level: application, stage: independent, confirmation: confirmed}
+    evidence:
+      - {ref: knowledge/json-dto.yaml, type: mixed}
+      - {ref: sessions/2026-09-20-json-dto-transport-boundary.md, type: coding, date: '2026-09-20'}
+    note: 'MIN закрыт 2026-09-20. На новой User-задаче самостоятельно воспроизведены transport DTO с optional pointers и json tags, DecodeUpdateUser через encoding/json, usecase input, entity и направление transport -> usecase -> entity. Остались отдельные weak points по JSON null vs omitted, nil-safe составным условиям и validate-before-mutate.'
 
   concurrency.goroutine-lifecycle:
     current: {level: application, stage: independent, confirmation: confirmed}
