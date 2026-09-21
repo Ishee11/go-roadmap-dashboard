@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-20'
+updated_at: '2026-09-21'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -35,13 +35,14 @@ skills:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence: [{ref: knowledge/structs.yaml, type: mixed}]
   go-core.receivers-method-set:
-    current: {level: application, stage: independent, confirmation: confirmed}
+    current: {level: application, stage: variable, confirmation: provisional}
     evidence:
       - {ref: knowledge/structs.yaml, type: mixed}
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-10-receivers-method-set.md, type: mixed, date: '2026-09-10'}
       - {ref: sessions/2026-09-18-receivers-method-set-embedding-typed-nil.md, type: reasoning, date: '2026-09-18'}
-    note: 'MIN закрыт 2026-09-18. После разбора границы direct call vs method expression Степан на свежем no-hint примере Meter самостоятельно и без ошибок классифицировал Meter.Read, (*Meter).Read, Meter.Reset и (*Meter).Reset с корректными function signatures. application.independent confirmed.'
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
+    note: '2026-09-21 свежий практический вопрос показал retention gap: при Save на pointer receiver сначала ошибочно указано, что LeadRepository реализует Repository, а не *Repository. После указания исправлено. Предыдущее independent evidence сохраняется исторически, но текущий MIN открыт до повторной no-hint проверки method set.'
   go-core.embedding-promotion:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
@@ -63,6 +64,12 @@ skills:
       - {ref: knowledge/interfaces.yaml, type: mixed}
       - {ref: sessions/2026-09-09-type-assertion-switch-confirmation.md, type: explanation, date: '2026-09-09'}
     note: После одного напоминания синтаксиса type assertion модель dynamic type была самостоятельно применена на новых примерах; type switch и тип v внутри case также подтверждены без подсказок.
+  go-core.interface-design:
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    evidence:
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_reasoning, date: '2026-09-21'}
+    note: 'На практическом кейсе разобрана consumer-side dependency: usecase задаёт LeadRepository как требование к сохранению, concrete repo реализует контракт. Сначала было заметное непонимание, после объяснения Service + interface + concrete repository собраны корректно. Нужна свежая самостоятельная проверка без объяснения.'
+
   go-core.errors-mechanics:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
@@ -76,7 +83,8 @@ skills:
       - {ref: knowledge/errors.yaml, type: reasoning}
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-18-errors-mechanics-diagnostic.md, type: reasoning, date: '2026-09-18'}
-    note: MIN application.variable сохраняется. После объяснения цепочки repository -> use case -> handler корректно определено, что storage-specific ошибки должны быть изолированы в repository; самостоятельный перенос модели без объяснения ещё не проверен.
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
+    note: 'MIN application.variable сохраняется. 2026-09-21 на реальном слоистом кейсе использованы sentinel ErrDuplicateLead и mapping repository -> usecase -> HTTP, но место общей sentinel error и часть boundary-решений потребовали направляющих вопросов. Следующая проверка должна быть без пошагового ведения.'
   go-core.defer:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
@@ -88,6 +96,7 @@ skills:
     evidence:
       - {ref: knowledge/json-dto.yaml, type: mixed}
       - {ref: sessions/2026-09-20-json-dto-transport-boundary.md, type: coding, date: '2026-09-20'}
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
     note: 'MIN закрыт 2026-09-20. На новой User-задаче самостоятельно воспроизведены transport DTO с optional pointers и json tags, DecodeUpdateUser через encoding/json, usecase input, entity и направление transport -> usecase -> entity. Остались отдельные weak points по JSON null vs omitted, nil-safe составным условиям и validate-before-mutate.'
 
   concurrency.goroutine-lifecycle:
@@ -218,19 +227,27 @@ skills:
     evidence:
       - {ref: knowledge/http-networks-api.yaml, type: explanation}
       - {ref: knowledge/errors.yaml, type: reasoning}
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
+    note: 'На практике собран POST handler и использованы 201/400/500, но response API и часть status mapping требовали подсказок; самостоятельный application уровень пока не подтверждён.'
   http-networks-api.http-methods-idempotency:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
-    evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
-    note: Есть корректное рассуждение про идемпотентный DELETE, но не полный набор method semantics.
+    evidence:
+      - {ref: knowledge/errors.yaml, type: reasoning}
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
+    note: '2026-09-21 практически проверен прикладной duplicate-safe POST usecase на in-memory repository: два одинаковых запроса дали 201 и один логический лид. Это domain-level idempotent handling, но общая HTTP method semantics и PostgreSQL/concurrency вариант ещё не проверены.'
   http-networks-api.http-error-status-contract:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
       - {ref: knowledge/errors.yaml, type: reasoning}
       - {ref: progress.yaml, type: historical}
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
+    note: 'Базовый contract ранее подтверждён. В guided handler 2026-09-21 один раз перепутан StatusBadRequest с InternalServerError при internal error; считать это точкой для короткой повторной проверки, но не отдельным основанием отменять предыдущий confirmed evidence.'
   http-networks-api.net-http-handlers-middleware:
-    current: {level: understanding, stage: contextualization, confirmation: provisional}
-    evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
-    note: Границы handler/use case понимаются, самостоятельный handler не проверен.
+    current: {level: application, stage: template, confirmation: provisional}
+    evidence:
+      - {ref: knowledge/errors.yaml, type: reasoning}
+      - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
+    note: 'Рабочий net/http handler собран и проверен реальными curl-запросами, но по шагам с подсказками по io.ReadAll, HandleFunc, ResponseWriter и early return. Повышение только до application.template/provisional; MIN application.independent не закрыт.'
   http-networks-api.retry-policy:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
