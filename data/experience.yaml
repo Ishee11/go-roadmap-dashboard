@@ -37,7 +37,7 @@ projects:
 
       - id: idempotent-leads
         title: Идемпотентный приём лидов
-        status: not_tested
+        status: learning
         summary: UNIQUE(source, external_id), INSERT и обработка конфликта как повторной доставки.
         target: Реализовать идемпотентный HTTP-сценарий на Go + PostgreSQL, включая конкурентные запросы и тестирование.
         source_ref: experience/agima-project-1/03-idempotent-leads.md
