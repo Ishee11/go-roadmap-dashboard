@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-21'
+updated_at: '2026-09-23'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -236,18 +236,20 @@ skills:
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
     note: '2026-09-21 практически проверен прикладной duplicate-safe POST usecase на in-memory repository: два одинаковых запроса дали 201 и один логический лид. Это domain-level idempotent handling, но общая HTTP method semantics и PostgreSQL/concurrency вариант ещё не проверены.'
   http-networks-api.http-error-status-contract:
-    current: {level: application, stage: variable, confirmation: confirmed}
+    current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence:
       - {ref: knowledge/errors.yaml, type: reasoning}
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
-    note: 'Базовый contract ранее подтверждён. В guided handler 2026-09-21 один раз перепутан StatusBadRequest с InternalServerError при internal error; считать это точкой для короткой повторной проверки, но не отдельным основанием отменять предыдущий confirmed evidence.'
+      - {ref: sessions/2026-09-23-http-net-http-retention-gap.md, type: guided_coding, date: '2026-09-23'}
+    note: 'Свежая проверка 2026-09-23 показала retention gap: корректный error response через http.Error и выбор status для malformed JSON самостоятельно не воспроизведены. Историческое evidence сохраняется, но текущий навык считать provisional до отдельной no-hint практики.'
   http-networks-api.net-http-handlers-middleware:
     current: {level: application, stage: template, confirmation: provisional}
     evidence:
       - {ref: knowledge/errors.yaml, type: reasoning}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
-    note: 'Рабочий net/http handler собран и проверен реальными curl-запросами, но по шагам с подсказками по io.ReadAll, HandleFunc, ResponseWriter и early return. Повышение только до application.template/provisional; MIN application.independent не закрыт.'
+      - {ref: sessions/2026-09-23-http-net-http-retention-gap.md, type: guided_coding, date: '2026-09-23'}
+    note: '2026-09-23 retention gap подтверждён повторно: Handler dependency, r.Body -> DTO -> usecase и 201 восстановлены только с пошаговыми подсказками; http.Error/status mapping самостоятельно не воспроизведены. Нужен отдельный практический блок net/http с нуля. MIN application.independent не закрыт.'
   http-networks-api.retry-policy:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
