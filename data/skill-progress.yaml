@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-29'
+updated_at: '2026-09-30'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -42,7 +42,8 @@ skills:
       - {ref: sessions/2026-09-10-receivers-method-set.md, type: mixed, date: '2026-09-10'}
       - {ref: sessions/2026-09-18-receivers-method-set-embedding-typed-nil.md, type: reasoning, date: '2026-09-18'}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
-    note: '2026-09-21 свежий практический вопрос показал retention gap: при Save на pointer receiver сначала ошибочно указано, что LeadRepository реализует Repository, а не *Repository. После указания исправлено. Предыдущее independent evidence сохраняется исторически, но текущий MIN открыт до повторной no-hint проверки method set.'
+      - {ref: sessions/2026-09-30-task-completion-architecture-incomplete.md, type: reasoning, date: '2026-09-30'}
+    note: '2026-09-30 на новой Task-задаче верно объяснил, почему *MemoryRepo с pointer receivers реализует интерфейс, а MemoryRepo нет. Но конструктор сначала содержал pointer-to-interface и был исправлен после объяснения; текущий MIN остаётся provisional до полной no-hint проверки.'
   go-core.embedding-promotion:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
@@ -69,7 +70,8 @@ skills:
     evidence:
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_reasoning, date: '2026-09-21'}
       - {ref: sessions/2026-09-29-booking-cancellation-architecture.md, type: guided_coding, date: '2026-09-29'}
-    note: 'На новой Booking-задаче usecase-side Repository, concrete *MemoryRepository и конструктор с интерфейсом собраны после нескольких объяснений. Уровень provisional сохранён: нужна самостоятельная проверка без подсказки.'
+      - {ref: sessions/2026-09-30-task-completion-architecture-incomplete.md, type: mixed, date: '2026-09-30'}
+    note: '2026-09-30 на новой Task-задаче самостоятельно собран consumer-side TaskRepository и объяснена зависимость сервиса от контракта; pointer-to-interface в первой версии потребовал объяснения. Уровень provisional сохранён до самостоятельного полного среза.'
 
   go-core.errors-mechanics:
     current: {level: application, stage: independent, confirmation: confirmed}
@@ -86,7 +88,8 @@ skills:
       - {ref: sessions/2026-09-18-errors-mechanics-diagnostic.md, type: reasoning, date: '2026-09-18'}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
       - {ref: sessions/2026-09-29-booking-cancellation-architecture.md, type: guided_coding, date: '2026-09-29'}
-    note: 'MIN application.variable сохраняется по прежнему evidence. В Booking-задаче 2026-09-29 repository возвращал общий ErrBookingNotFound, usecase пропускал разные Load errors, handler отображал 404/403/500 после подсказок. Нужна самостоятельная проверка границ.'
+      - {ref: sessions/2026-09-30-task-completion-architecture-incomplete.md, type: coding, date: '2026-09-30'}
+    note: 'MIN application.variable сохраняется по прежнему evidence. В TaskDone первая версия потеряла ошибку Save и возвращала nil; после замечания исправлены ошибки Load, domain и Save. Нужна самостоятельная проверка полного error path до handler.'
   go-core.defer:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
