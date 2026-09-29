@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-23'
+updated_at: '2026-09-29'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -68,7 +68,8 @@ skills:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence:
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_reasoning, date: '2026-09-21'}
-    note: 'На практическом кейсе разобрана consumer-side dependency: usecase задаёт LeadRepository как требование к сохранению, concrete repo реализует контракт. Сначала было заметное непонимание, после объяснения Service + interface + concrete repository собраны корректно. Нужна свежая самостоятельная проверка без объяснения.'
+      - {ref: sessions/2026-09-29-booking-cancellation-architecture.md, type: guided_coding, date: '2026-09-29'}
+    note: 'На новой Booking-задаче usecase-side Repository, concrete *MemoryRepository и конструктор с интерфейсом собраны после нескольких объяснений. Уровень provisional сохранён: нужна самостоятельная проверка без подсказки.'
 
   go-core.errors-mechanics:
     current: {level: application, stage: independent, confirmation: confirmed}
@@ -84,7 +85,8 @@ skills:
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-18-errors-mechanics-diagnostic.md, type: reasoning, date: '2026-09-18'}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
-    note: 'MIN application.variable сохраняется. 2026-09-21 на реальном слоистом кейсе использованы sentinel ErrDuplicateLead и mapping repository -> usecase -> HTTP, но место общей sentinel error и часть boundary-решений потребовали направляющих вопросов. Следующая проверка должна быть без пошагового ведения.'
+      - {ref: sessions/2026-09-29-booking-cancellation-architecture.md, type: guided_coding, date: '2026-09-29'}
+    note: 'MIN application.variable сохраняется по прежнему evidence. В Booking-задаче 2026-09-29 repository возвращал общий ErrBookingNotFound, usecase пропускал разные Load errors, handler отображал 404/403/500 после подсказок. Нужна самостоятельная проверка границ.'
   go-core.defer:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
@@ -242,14 +244,16 @@ skills:
       - {ref: progress.yaml, type: historical}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
       - {ref: sessions/2026-09-23-http-net-http-retention-gap.md, type: guided_coding, date: '2026-09-23'}
-    note: 'Свежая проверка 2026-09-23 показала retention gap: корректный error response через http.Error и выбор status для malformed JSON самостоятельно не воспроизведены. Историческое evidence сохраняется, но текущий навык считать provisional до отдельной no-hint практики.'
+      - {ref: sessions/2026-09-29-booking-cancellation-architecture.md, type: guided_coding, date: '2026-09-29'}
+    note: 'Свежий retention gap 2026-09-23 сохранён. В Booking-задаче 2026-09-29 после подсказок написаны 204/404/403/500; реальные запросы подтвердили только два 204. Нужна no-hint проверка статусов и ошибок.'
   http-networks-api.net-http-handlers-middleware:
     current: {level: application, stage: template, confirmation: provisional}
     evidence:
       - {ref: knowledge/errors.yaml, type: reasoning}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
       - {ref: sessions/2026-09-23-http-net-http-retention-gap.md, type: guided_coding, date: '2026-09-23'}
-    note: '2026-09-23 retention gap подтверждён повторно: Handler dependency, r.Body -> DTO -> usecase и 201 восстановлены только с пошаговыми подсказками; http.Error/status mapping самостоятельно не воспроизведены. Нужен отдельный практический блок net/http с нуля. MIN application.independent не закрыт.'
+      - {ref: sessions/2026-09-29-booking-cancellation-architecture.md, type: guided_coding, date: '2026-09-29'}
+    note: 'На 2026-09-23 был retention gap. В Booking-задаче 2026-09-29 ServeHTTP, Request/ResponseWriter и регистрация маршрута потребовали объяснения; два последовательных POST дали 204. MIN application.independent не закрыт.'
   http-networks-api.retry-policy:
     current: {level: understanding, stage: contextualization, confirmation: provisional}
     evidence: [{ref: knowledge/errors.yaml, type: reasoning}]
