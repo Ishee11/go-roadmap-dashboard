@@ -96,7 +96,8 @@ skills:
     evidence:
       - {ref: knowledge/defer.yaml, type: mixed}
       - {ref: sessions/2026-09-18-defer-diagnostic.md, type: mixed, date: '2026-09-18'}
-    note: 'Расширенная диагностика 2026-09-18: самостоятельно подтверждены LIFO, eager evaluation аргументов defer, closure capture, deferred method receivers, базовый file cleanup и mutex Unlock. Ошибки сохраняются в named return semantics, loop-scoped cleanup, Close error propagation и выборе конкретного HTTP cleanup; transaction Rollback pattern потребовал объяснения. Текущий уровень application.variable/confirmed, MIN application.independent не закрыт.'
+      - {ref: sessions/2026-10-01-defer-resource-cleanup-review.md, type: guided_coding, date: '2026-10-01'}
+    note: '2026-10-01 на новых readFile/processFiles задачах defer после Open выбран верно, но named result, приоритет основной ошибки и scope defer в цикле потребовали коррекций. Текущий уровень application.variable/confirmed сохраняется, MIN application.independent не закрыт.'
   go-core.json-dto:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
