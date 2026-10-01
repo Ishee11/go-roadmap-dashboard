@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-09-18-3';
+const DATA_VERSION = '2026-10-01-1';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -79,6 +79,7 @@ const evaluated = catalog.skills.map(evaluate);
 const byId = new Map(evaluated.map(x => [x.skill.id, x]));
 const blockOrder = new Map(catalog.blocks.map((b, i) => [b.id, i]));
 const priorities = layerData.map(layer => layer.meta.priority);
+const tabs = [...priorities, 'experience'];
 
 let priority = manifest.default_priority ?? priorities[0];
 let filter = 'all';
@@ -231,7 +232,29 @@ function experienceHtml() {
   </section>`;
 }
 
+function tabsHtml() {
+  return tabs.map(tab => `<button data-priority="${tab}" class="${priority === tab ? 'active' : ''}">${tab === 'experience' ? 'Кейсы из опыта' : tab}</button>`).join('');
+}
+
+function bindTabs() {
+  app.querySelectorAll('[data-priority]').forEach(btn => btn.addEventListener('click', () => {
+    priority = btn.dataset.priority;
+    selectedBlockId = null;
+    selectedSkillId = null;
+    filter = 'all';
+    render();
+  }));
+}
+
 function render() {
+  if (priority === 'experience') {
+    app.innerHTML = `
+      <header class="hero"><div><span class="eyebrow">Практика · заявляемый опыт</span><h1>Кейсы из опыта</h1><p>Проверяем задачи из рассказов о проектах самостоятельной практикой. Эти статусы не входят в расчёт P0 и P1.</p><div class="filters" style="justify-content:flex-start;margin-top:14px">${tabsHtml()}</div></div><div class="updated">Данные: ${experienceData.updated_at}</div></header>
+      ${experienceHtml()}
+      <footer>Практические таргеты связаны с roadmap, но подтверждаются отдельно. Подробные задания хранятся в private learning repository.</footer>`;
+    bindTabs();
+    return;
+  }
   ensureSelection();
 
   const items = scopedItems();
@@ -277,14 +300,13 @@ function render() {
     <span class="idx">${String(i + 1).padStart(2, '0')}</span><span class="next-main"><strong>${item.skill.title}</strong><small>${blockById.get(item.skill.block)?.title ?? ''}</small></span>
     <span class="next-level">${labelOf(item.current)} → ${labelOf(item.skill.min)}</span>${status(item)}</button>`).join('');
 
-  const priorityTabs = priorities.map(p => `<button data-priority="${p}" class="${priority === p ? 'active' : ''}">${p}</button>`).join('');
   const scopeLabel = priorityMeta.get(priority)?.label ?? priority;
   const scopeDescription = priority === 'P0'
     ? 'Обязательный слой: сначала закрываем MIN по базовым навыкам Go backend middle.'
     : 'Следующий слой interview readiness: углубляем production-темы, не смешивая их с P0 readiness.';
 
   app.innerHTML = `
-    <header class="hero"><div><span class="eyebrow">${priority} · ${scopeLabel} · ${catalog.objective}</span><h1>Go Middle Readiness</h1><p>${scopeDescription}</p><div class="filters" style="justify-content:flex-start;margin-top:14px">${priorityTabs}</div></div><div class="updated">Данные: ${progress.updated_at}</div></header>
+    <header class="hero"><div><span class="eyebrow">${priority} · ${scopeLabel} · ${catalog.objective}</span><h1>Go Middle Readiness</h1><p>${scopeDescription}</p><div class="filters" style="justify-content:flex-start;margin-top:14px">${tabsHtml()}</div></div><div class="updated">Данные: ${progress.updated_at}</div></header>
     <section class="metrics">
       <article class="metric primary"><div class="metric-row"><span class="eyebrow">${priority} MINIMUM</span><strong>${pct(minMet, required.length)}%</strong></div>${bar(pct(minMet, required.length))}<p><b>${minMet}</b> из <b>${required.length}</b> обязательных MIN подтверждены</p></article>
       <article class="metric"><span class="eyebrow">TARGET coverage</span><strong class="big">${targetMet}/${items.length}</strong><p>${pct(targetMet, items.length)}% навыков дошли до целевого уровня</p></article>
@@ -301,16 +323,9 @@ function render() {
       </aside>
     </section>
     <section class="section card" style="padding:24px"><div class="section-head"><div><span class="eyebrow">Next · ${priority}</span><h2 class="section-title">Ближайшие gaps</h2></div><p>Сначала короткие подтверждения, затем навыки, которые ближе всего к MIN.</p></div><div class="next-list">${nextHtml || '<p style="color:var(--muted)">Все обязательные MIN этого слоя закрыты.</p>'}</div></section>
-    ${experienceHtml()}
     <footer>Публичная read-only визуализация. Source of truth остаётся в private learning repository; P0 и P1 считаются независимо из опубликованных YAML.</footer>`;
 
-  app.querySelectorAll('[data-priority]').forEach(btn => btn.addEventListener('click', () => {
-    priority = btn.dataset.priority;
-    selectedBlockId = null;
-    selectedSkillId = null;
-    filter = 'all';
-    render();
-  }));
+  bindTabs();
   app.querySelectorAll('[data-block]').forEach(btn => btn.addEventListener('click', () => {
     selectedBlockId = btn.dataset.block;
     if (!btn.dataset.skill) selectedSkillId = items.find(x => x.skill.block === selectedBlockId)?.skill.id ?? selectedSkillId;

@@ -19,18 +19,6 @@ blocks:
         title: Go clients / Sarama
       - id: advanced-patterns
         title: Architecture patterns
-  - id: agima-experience
-    title: AGIMA experience cases
-    priority: P1
-    groups:
-      - id: crm
-        title: CRM domain and access
-      - id: integrations
-        title: Integrations and reliability
-      - id: exports
-        title: Background exports
-      - id: architecture
-        title: Architecture choice
 
 skills:
   - id: message-brokers.kafka-core-model
@@ -102,53 +90,4 @@ skills:
     title: Kafka vs RabbitMQ vs NATS
     description: выбор брокера по модели нагрузки, routing, replay, ordering и operational trade-offs
     min: understanding.comparison
-    target: evaluation.comparison
-  - id: agima-experience.crm-state-transitions
-    block: agima-experience
-    group: crm
-    title: CRM state transitions and history
-    description: сделки, задачи, допустимые переходы, обязательные действия и атомарная запись истории изменений
-    min: application.variable
-    target: analysis.defects
-  - id: agima-experience.rbac-audit
-    block: agima-experience
-    group: crm
-    title: RBAC and action audit
-    description: разрешение на бизнес-действие, проверка доступа на границе usecase, история изменений против аудита основания доступа
-    min: application.variable
-    target: analysis.defects
-  - id: agima-experience.integration-reliability
-    block: agima-experience
-    group: integrations
-    title: CRM integration reliability
-    description: входящие лиды, уникальный бизнес-ключ, повторная доставка, RabbitMQ notification и окно отказа между DB commit и публикацией
-    min: understanding.contextualization
-    target: synthesis.combination
-  - id: agima-experience.postgres-task-queue
-    block: agima-experience
-    group: exports
-    title: Durable PostgreSQL task queue
-    description: HTTP 202/task ID, атомарный claim, статусы, retry, lease/recovery, bounded workers и повторный запуск после сбоя
-    min: application.variable
-    target: synthesis.adaptation
-  - id: agima-experience.report-query-optimization
-    block: agima-experience
-    group: exports
-    title: Queue and report query optimization
-    description: partial/composite indexes по реальным фильтрам и сортировке, EXPLAIN ANALYZE, batch UPDATE и цена MVCC/WAL
-    min: application.variable
-    target: evaluation.optimization
-  - id: agima-experience.cache-export-consistency
-    block: agima-experience
-    group: exports
-    title: Cache and export consistency
-    description: versioned cache schema, warm-up readiness, атомарная смена поколения, инвалидация и отказ от частичных выгрузок
-    min: understanding.contextualization
-    target: synthesis.adaptation
-  - id: agima-experience.modular-monolith-choice
-    block: agima-experience
-    group: architecture
-    title: Modular monolith trade-offs
-    description: границы модулей, цена сквозных изменений и синхронных контрактов, критерии выбора между сервисами и модульным монолитом
-    min: understanding.contextualization
     target: evaluation.comparison

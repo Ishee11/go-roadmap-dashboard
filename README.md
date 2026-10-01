@@ -12,7 +12,7 @@ The private repository `Ishee11/go-learning-roadmap` remains the source of truth
 
 The dashboard uses one shared skill-level scale, but calculates readiness separately for each priority. P1 gaps therefore do not reduce the P0 readiness percentage.
 
-Experience readiness is shown as a separate section. It tracks whether skills implied by interview experience stories are not tested, being learned, demonstrated, or retained. These statuses do not automatically inherit progress from the general roadmap.
+Experience practice is shown in its own `Кейсы из опыта` tab alongside P0 and P1. It tracks whether tasks implied by interview experience stories are not tested, being learned, demonstrated, or retained. These statuses do not automatically inherit progress from the general roadmap or affect P0/P1 readiness.
 
 Adding a future P2/P3 layer should be data-driven: create the corresponding catalog/progress YAML files and register them in `data/catalogs.yaml`; the dashboard does not need a new hard-coded priority list.
 

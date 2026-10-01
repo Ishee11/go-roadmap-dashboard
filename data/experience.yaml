@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-18'
+updated_at: '2026-10-01'
 status_scale:
   not_tested:
     label: Не проверено
@@ -56,6 +56,13 @@ projects:
         target: Требует дальнейшей декомпозиции после уточнения конкретных интеграционных сценариев.
         source_ref: experience/agima-project-1/05-external-integrations.md
 
+      - id: modular-monolith
+        title: Выбор модульного монолита
+        status: not_tested
+        summary: Сквозные сценарии требовали изменений в нескольких сервисах; система переходила к модульному монолиту.
+        target: На новом сценарии самостоятельно определить границы модулей и аргументировать выбор архитектуры по стоимости изменений, деплоя, отказов и масштабирования.
+        source_ref: experience/agima-project-1/06-modular-monolith.md
+
   - id: agima-project-2
     company: АГИМА
     title: Второй проект — сервис генерации выгрузок
@@ -82,6 +89,13 @@ projects:
         summary: Замена множества отдельных UPDATE на пакетное обновление группы строк.
         target: Реализовать batch update на Go + PostgreSQL и объяснить выигрыш, транзакции, блокировки, MVCC, WAL и влияние индексов.
         source_ref: experience/agima-project-2/03-batch-updates.md
+
+      - id: cache-export-consistency
+        title: Согласованность кэша и выгрузок
+        status: not_tested
+        summary: При несовместимой схеме Redis генерацию останавливали, кэш очищали и прогревали заново.
+        target: Самостоятельно обработать несовместимую схему и частичный прогрев, определить готовность к генерации и объяснить выбор между доступностью и корректностью.
+        source_ref: experience/agima-project-2/04-cache-export-consistency.md
 
   - id: mts-dsp
     company: МТС
@@ -116,4 +130,3 @@ projects:
         summary: Commit offset только после надёжного publish; повторная доставка и downstream idempotency по стабильному event key.
         target: Самостоятельно реализовать pipeline process → publish → commit и проверить аварийные сценарии, дубли и идемпотентное применение.
         source_ref: experience/mts-dsp/04-at-least-once-idempotency.md
-
