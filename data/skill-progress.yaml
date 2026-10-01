@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-09-30'
+updated_at: '2026-10-01'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -66,12 +66,13 @@ skills:
       - {ref: sessions/2026-09-09-type-assertion-switch-confirmation.md, type: explanation, date: '2026-09-09'}
     note: После одного напоминания синтаксиса type assertion модель dynamic type была самостоятельно применена на новых примерах; type switch и тип v внутри case также подтверждены без подсказок.
   go-core.interface-design:
-    current: {level: understanding, stage: contextualization, confirmation: provisional}
+    current: {level: understanding, stage: contextualization, confirmation: confirmed}
     evidence:
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_reasoning, date: '2026-09-21'}
       - {ref: sessions/2026-09-29-booking-cancellation-architecture.md, type: guided_coding, date: '2026-09-29'}
       - {ref: sessions/2026-09-30-task-completion-architecture-incomplete.md, type: mixed, date: '2026-09-30'}
-    note: '2026-09-30 на новой Task-задаче самостоятельно собран consumer-side TaskRepository и объяснена зависимость сервиса от контракта; pointer-to-interface в первой версии потребовал объяснения. Уровень provisional сохранён до самостоятельного полного среза.'
+      - {ref: sessions/2026-10-01-interface-design-confirmation.md, type: mixed, date: '2026-10-01'}
+    note: '2026-10-01 на новой SendReceipt-задаче самостоятельно выбраны consumer-side интерфейс, поле и конструктор без pointer-to-interface; объяснены полезность fake и случай, когда интерфейс избыточен. MIN подтверждён; самостоятельный полный вертикальный срез не проверялся.'
 
   go-core.errors-mechanics:
     current: {level: application, stage: independent, confirmation: confirmed}
