@@ -19,6 +19,16 @@ blocks:
         title: Go clients / Sarama
       - id: advanced-patterns
         title: Architecture patterns
+  - id: observability-performance
+    title: Observability / performance diagnostics
+    priority: P1
+    groups:
+      - id: logging
+        title: Structured logging
+      - id: metrics
+        title: Metrics and latency
+      - id: diagnostics
+        title: Investigation and profiling
 
 skills:
   - id: message-brokers.kafka-core-model
@@ -91,3 +101,52 @@ skills:
     description: выбор брокера по модели нагрузки, routing, replay, ordering и operational trade-offs
     min: understanding.comparison
     target: evaluation.comparison
+  - id: observability-performance.structured-logging
+    block: observability-performance
+    group: logging
+    title: Structured logs and correlation
+    description: slog, уровни, стабильные поля, request ID, логирование ошибки на границе, исключение секретов и персональных данных
+    min: application.variable
+    target: analysis.defects
+  - id: observability-performance.prometheus-instrumentation
+    block: observability-performance
+    group: metrics
+    title: Prometheus instrumentation
+    description: counters, gauges, histograms, HTTP/worker metrics, labels, cardinality и стоимость измерений
+    min: application.template
+    target: application.independent
+  - id: observability-performance.latency-percentiles
+    block: observability-performance
+    group: metrics
+    title: Latency percentiles and throughput
+    description: p50/p95/p99 из распределения задержек, период и выборка, RPS/throughput, error rate, saturation; не выводить P95 из среднего или backlog
+    min: understanding.contextualization
+    target: analysis.defects
+  - id: observability-performance.grafana-dashboards-alerts
+    block: observability-performance
+    group: metrics
+    title: Grafana dashboards and alerts
+    description: панели по latency/traffic/errors/saturation, сравнение с baseline, выбор окна и порога alert, различие симптома и причины
+    min: understanding.contextualization
+    target: synthesis.combination
+  - id: observability-performance.logs-metrics-traces
+    block: observability-performance
+    group: diagnostics
+    title: Correlating logs, metrics and traces
+    description: переход от всплеска метрики к конкретному request/trace, span boundaries, propagation context и ограничения каждого сигнала
+    min: understanding.contextualization
+    target: analysis.patterns
+  - id: observability-performance.pprof-benchmarks
+    block: observability-performance
+    group: diagnostics
+    title: Go pprof and benchmarks
+    description: CPU/heap/goroutine profiles, go test -bench/-benchmem, поиск bottleneck и проверка влияния изменения
+    min: application.template
+    target: application.independent
+  - id: observability-performance.measurement-experiment
+    block: observability-performance
+    group: diagnostics
+    title: Performance measurement experiment
+    description: baseline, одинаковая нагрузка и окружение, профиль, гипотеза, повторный замер, trade-offs и отделение оценки от фактического результата
+    min: understanding.contextualization
+    target: evaluation.optimization
