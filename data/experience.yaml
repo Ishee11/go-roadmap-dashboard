@@ -28,6 +28,34 @@ projects:
         target: Самостоятельно спроектировать и реализовать предметные модели, use cases, API, бизнес-валидацию и обработку ошибок. PostgreSQL и тесты проверяются отдельно.
         source_ref: experience/agima-project-1/01-crm-business-logic.md
 
+      - id: postgresql
+        title: PostgreSQL в сценариях CRM
+        status: not_tested
+        summary: Схема, транзакции, pgx и UNIQUE(source, external_id) для идемпотентного приёма лидов.
+        target: Самостоятельно реализовать хранение и конкурентно безопасную вставку; объяснить ошибки, границу транзакции и гонку SELECT → INSERT.
+        source_ref: experience/agima-project-1/07-postgresql.md
+
+      - id: testing
+        title: Тесты сценариев CRM
+        status: not_tested
+        summary: Unit, HTTP и интеграционные проверки бизнес-правил, RBAC и повторной доставки.
+        target: Самостоятельно написать и запустить тесты успешных, ошибочных и конкурентных сценариев; объяснить назначение каждого уровня.
+        source_ref: experience/agima-project-1/08-testing.md
+
+      - id: defer
+        title: Defer и освобождение ресурсов
+        status: not_tested
+        summary: Cleanup транзакций и ресурсов, порядок defer, приоритет ошибок и область действия в цикле.
+        target: На новой задаче без подсказок корректно применить defer и объяснить named result, cleanup и ошибочные пути.
+        source_ref: experience/agima-project-1/09-defer.md
+
+      - id: panic-recover
+        title: Panic / recover
+        status: not_tested
+        summary: Раскрутка стека, выполнение defer и граница восстановления внутри одной горутины.
+        target: Предсказать поведение panic/recover, найти дефект в границе восстановления и объяснить отличие от обычной обработки error.
+        source_ref: experience/agima-project-1/10-panic-recover.md
+
       - id: rbac-audit
         title: RBAC и аудит действий
         status: not_tested
@@ -62,34 +90,6 @@ projects:
         summary: Сквозные сценарии требовали изменений в нескольких сервисах; система переходила к модульному монолиту.
         target: На новом сценарии самостоятельно определить границы модулей и аргументировать выбор архитектуры по стоимости изменений, деплоя, отказов и масштабирования.
         source_ref: experience/agima-project-1/06-modular-monolith.md
-
-      - id: postgresql
-        title: PostgreSQL в сценариях CRM
-        status: not_tested
-        summary: Схема, транзакции, pgx и UNIQUE(source, external_id) для идемпотентного приёма лидов.
-        target: Самостоятельно реализовать хранение и конкурентно безопасную вставку; объяснить ошибки, границу транзакции и гонку SELECT → INSERT.
-        source_ref: experience/agima-project-1/07-postgresql.md
-
-      - id: testing
-        title: Тесты сценариев CRM
-        status: not_tested
-        summary: Unit, HTTP и интеграционные проверки бизнес-правил, RBAC и повторной доставки.
-        target: Самостоятельно написать и запустить тесты успешных, ошибочных и конкурентных сценариев; объяснить назначение каждого уровня.
-        source_ref: experience/agima-project-1/08-testing.md
-
-      - id: defer
-        title: Defer и освобождение ресурсов
-        status: not_tested
-        summary: Cleanup транзакций и ресурсов, порядок defer, приоритет ошибок и область действия в цикле.
-        target: На новой задаче без подсказок корректно применить defer и объяснить named result, cleanup и ошибочные пути.
-        source_ref: experience/agima-project-1/09-defer.md
-
-      - id: panic-recover
-        title: Panic / recover
-        status: not_tested
-        summary: Раскрутка стека, выполнение defer и граница восстановления внутри одной горутины.
-        target: Предсказать поведение panic/recover, найти дефект в границе восстановления и объяснить отличие от обычной обработки error.
-        source_ref: experience/agima-project-1/10-panic-recover.md
 
   - id: agima-project-2
     company: АГИМА
