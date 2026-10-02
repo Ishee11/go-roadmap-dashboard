@@ -22,10 +22,10 @@ projects:
     source_ref: experience/agima-project-1/README.md
     items:
       - id: crm-business-logic
-        title: Бизнес-логика CRM
+        title: Архитектура и бизнес-логика CRM
         status: not_tested
         summary: Сделки, статусы, задачи, контакты и история изменений.
-        target: Самостоятельно спроектировать и реализовать предметные модели, use cases, API, бизнес-валидацию и обработку ошибок. PostgreSQL и тесты проверяются отдельно.
+        target: Начать с архитектуры небольшого CRM-сценария на in-memory хранилище; самостоятельно определить модель, use case, HTTP/repository границы и обработку ошибок. PostgreSQL и тесты идут позже.
         source_ref: experience/agima-project-1/01-crm-business-logic.md
 
       - id: postgresql
@@ -41,20 +41,6 @@ projects:
         summary: Unit, HTTP и интеграционные проверки бизнес-правил, RBAC и повторной доставки.
         target: Самостоятельно написать и запустить тесты успешных, ошибочных и конкурентных сценариев; объяснить назначение каждого уровня.
         source_ref: experience/agima-project-1/08-testing.md
-
-      - id: defer
-        title: Defer и освобождение ресурсов
-        status: not_tested
-        summary: Cleanup транзакций и ресурсов, порядок defer, приоритет ошибок и область действия в цикле.
-        target: На новой задаче без подсказок корректно применить defer и объяснить named result, cleanup и ошибочные пути.
-        source_ref: experience/agima-project-1/09-defer.md
-
-      - id: panic-recover
-        title: Panic / recover
-        status: not_tested
-        summary: Раскрутка стека, выполнение defer и граница восстановления внутри одной горутины.
-        target: Предсказать поведение panic/recover, найти дефект в границе восстановления и объяснить отличие от обычной обработки error.
-        source_ref: experience/agima-project-1/10-panic-recover.md
 
       - id: rbac-audit
         title: RBAC и аудит действий
