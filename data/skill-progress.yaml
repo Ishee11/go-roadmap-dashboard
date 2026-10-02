@@ -1,5 +1,5 @@
 version: 1
-updated_at: '2026-10-01'
+updated_at: '2026-10-02'
 skill_catalog: data/skills.yaml
 
 skills:
@@ -35,7 +35,7 @@ skills:
     current: {level: application, stage: independent, confirmation: confirmed}
     evidence: [{ref: knowledge/structs.yaml, type: mixed}]
   go-core.receivers-method-set:
-    current: {level: application, stage: variable, confirmation: provisional}
+    current: {level: application, stage: independent, confirmation: confirmed}
     evidence:
       - {ref: knowledge/structs.yaml, type: mixed}
       - {ref: progress.yaml, type: historical}
@@ -43,7 +43,8 @@ skills:
       - {ref: sessions/2026-09-18-receivers-method-set-embedding-typed-nil.md, type: reasoning, date: '2026-09-18'}
       - {ref: sessions/2026-09-21-experience-idempotent-lead-http.md, type: guided_coding, date: '2026-09-21'}
       - {ref: sessions/2026-09-30-task-completion-architecture-incomplete.md, type: reasoning, date: '2026-09-30'}
-    note: '2026-09-30 на новой Task-задаче верно объяснил, почему *MemoryRepo с pointer receivers реализует интерфейс, а MemoryRepo нет. Но конструктор сначала содержал pointer-to-interface и был исправлен после объяснения; текущий MIN остаётся provisional до полной no-hint проверки.'
+      - {ref: sessions/2026-10-02-receivers-method-set-confirmation.md, type: coding, date: '2026-10-02'}
+    note: '2026-10-02 на новой Ledger-задаче без подсказок выбрал pointer receiver, реализовал изменение состояния и передал *Ledger в Adder; с независимым evidence 2026-09-18 MIN application.independent подтверждён. Method expression Queue.Drain сегодня потребовал объяснения и остаётся для retention.'
   go-core.embedding-promotion:
     current: {level: application, stage: variable, confirmation: confirmed}
     evidence:
