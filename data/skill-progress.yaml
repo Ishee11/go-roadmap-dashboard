@@ -155,15 +155,17 @@ skills:
     note: Самостоятельно реализован Counter на atomic.Int64 через Add/Load; выбор atomic против Mutex и границы применимости на вариативной задаче ещё не проверены.
 
   concurrency.select:
-    current: {level: application, stage: template, confirmation: provisional}
+    current: {level: application, stage: variable, confirmation: provisional}
     evidence:
       - {ref: sessions/2026-10-04-concurrency-multiprocess-cancellation.md, type: guided_coding, date: '2026-10-04'}
-    note: 'После объяснения встроил select ctx.Done/default под mutex; самостоятельно исправил код после замечания о забытом Unlock. Нужна no-hint новая задача, MIN application.independent не закрыт.'
+      - {ref: sessions/2026-10-04-context-worker-cancel.md, type: mixed_coding, date: '2026-10-04'}
+    note: 'На новой worker-задаче самостоятельно написал select с ctx.Done и time.After; ошибка с лишней goroutine и WaitGroup исправлена по подсказкам. MIN independent не закрыт; timeout и parent cancellation ещё не проверены.'
   concurrency.context:
-    current: {level: application, stage: template, confirmation: provisional}
+    current: {level: application, stage: variable, confirmation: provisional}
     evidence:
       - {ref: sessions/2026-10-04-concurrency-multiprocess-cancellation.md, type: guided_coding, date: '2026-10-04'}
-    note: 'С подсказками освоены WithCancel, распространение ctx в jobs и отмена после успеха; не проверены независимое написание, external cancellation, empty jobs и go test -race. MIN application.independent не закрыт.'
+      - {ref: sessions/2026-10-04-context-worker-cancel.md, type: mixed_coding, date: '2026-10-04'}
+    note: 'На новой worker-задаче сам написал WithCancel, передачу ctx, ветку Done и cancel; final WaitGroup/goroutine исправлены с подсказками. Не проверены WithTimeout, ctx.Err, внешняя отмена, empty jobs и go test -race. MIN independent не закрыт.'
 
   sql-postgresql.query-basics:
     current: {level: application, stage: variable, confirmation: confirmed}
