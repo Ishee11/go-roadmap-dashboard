@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-01-1';
+const DATA_VERSION = '2026-10-05-1';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -37,6 +37,26 @@ const layerData = await Promise.all((manifest.layers ?? []).map(async layer => {
   ]);
   return { meta: layer, catalog: layerCatalog, progress: layerProgress };
 }));
+
+// Public P0 updates override the immutable base snapshot. Keep this
+// manifest in sync with the published per-skill YAML files.
+const p0Layer = layerData.find(layer => layer.meta.priority === 'P0');
+if (p0Layer) {
+  const shardManifest = await fetchYaml('./data/skill-progress.d/manifest.yaml');
+  if (!Array.isArray(shardManifest.skills)) throw new Error('Invalid skill-progress shard manifest');
+  const shardEntries = await Promise.all(shardManifest.skills.map(async skillId => ({
+    skillId,
+    update: await fetchYaml(`./data/skill-progress.d/${skillId}.yaml`),
+  })));
+  for (const { skillId, update } of shardEntries) {
+    if (!update?.current || !Array.isArray(update.evidence)) {
+      throw new Error(`Invalid skill progress update: ${skillId}`);
+    }
+    const { updated_at, ...entry } = update;
+    p0Layer.progress.skills[skillId] = entry;
+    if (updated_at > p0Layer.progress.updated_at) p0Layer.progress.updated_at = updated_at;
+  }
+}
 
 const baseLayer = layerData.find(layer => layer.meta.priority === manifest.default_priority) ?? layerData[0];
 if (!baseLayer) throw new Error('data/catalogs.yaml has no layers');
