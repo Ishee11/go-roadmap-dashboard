@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-05-1';
+const DATA_VERSION = '2026-10-06-1';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -184,6 +184,32 @@ function nextEvidence(code) {
   return 'Самостоятельно воспроизвести ключевую модель без подсказки.';
 }
 
+function dependencyReady(item) {
+  return item.targetMet || item.minStatus === 'min_met' || item.minStatus === 'not_required';
+}
+
+function dependenciesOf(item) {
+  return (item.skill.depends_on ?? []).map(id => byId.get(id)).filter(Boolean);
+}
+
+function unlocksOf(item) {
+  return evaluated.filter(candidate => candidate.skill.depends_on?.includes(item.skill.id));
+}
+
+function nextStep(item, blockers) {
+  if (blockers.length) return `Сначала проверить prerequisite: ${blockers[0].skill.title} — ${statusMeta(blockers[0])[0]}.`;
+  if (item.targetMet) return 'TARGET подтверждён: удерживать навык интервальными проверками.';
+  if (item.minStatus === 'unassessed') return 'Frontier Check: определить фактический CURRENT до уровня MIN.';
+  if (item.minStatus === 'needs_confirmation') return 'Новая независимая проверка для подтверждения текущего уровня.';
+  if (item.minStatus === 'below_min') return 'Практика от текущего уровня к MIN без повторного прохождения уже подтверждённого.';
+  if (item.minStatus === 'min_met') return 'MIN закрыт: следующий шаг — движение к TARGET по приоритету.';
+  return 'Навык не блокирует MIN; углубление можно отложить.';
+}
+
+function relationHtml(item) {
+  return `<button class="relation-item" data-skill="${item.skill.id}" data-block="${item.skill.block}"><strong>${item.skill.title}</strong>${status(item)}</button>`;
+}
+
 function blockStats(block, items) {
   const blockItems = items.filter(x => x.skill.block === block.id);
   const req = blockItems.filter(x => x.skill.min != null);
@@ -283,6 +309,9 @@ function render() {
   const selectedBlock = blockById.get(selectedBlockId) ?? blocks[0];
   const selected = byId.get(selectedSkillId) ?? gaps[0] ?? items[0];
   const suggested = gaps[0] ?? items[0];
+  const selectedDependencies = selected ? dependenciesOf(selected) : [];
+  const selectedUnlocks = selected ? unlocksOf(selected) : [];
+  const unresolvedDependencies = selectedDependencies.filter(item => !dependencyReady(item));
 
   if (!selectedBlock || !selected || !suggested) {
     app.innerHTML = '<p class="loading">Для выбранного приоритета пока нет навыков.</p>';
@@ -312,6 +341,13 @@ function render() {
       </button>`).join('')}</div></section>`;
   }).join('');
 
+  const dependenciesHtml = selectedDependencies.length
+    ? `<div class="relation-list">${selectedDependencies.map(relationHtml).join('')}</div>`
+    : '<p class="relation-empty">Прямые prerequisites не заданы.</p>';
+  const unlocksHtml = selectedUnlocks.length
+    ? `<div class="relation-list">${selectedUnlocks.map(relationHtml).join('')}</div>`
+    : '<p class="relation-empty">Прямых downstream-навыков пока не размечено.</p>';
+
   const ev = selected.entry?.evidence?.length
     ? `<ul class="evidence">${selected.entry.evidence.map(e => `<li><a href="${privateRepoBase}${e.ref}" target="_blank" rel="noreferrer">${e.ref}</a><small>${e.type ?? 'evidence'}${e.date ? ` · ${e.date}` : ''}</small></li>`).join('')}</ul>`
     : '<p>Подтверждающих записей пока нет.</p>';
@@ -337,6 +373,9 @@ function render() {
     <section class="layout section">
       <div class="panel"><div class="toolbar"><div><span class="eyebrow">Roadmap · ${priority}</span><h2 class="section-title">${selectedBlock.title}</h2></div><div class="filters">${[['all','Все'],['gaps','Ниже MIN'],['confirm','Подтвердить'],['min','MIN'],['target','TARGET']].map(([v,t]) => `<button data-filter="${v}" class="${filter === v ? 'active' : ''}">${t}</button>`).join('')}</div></div>${groupsHtml || '<p style="color:var(--muted)">В этом фильтре навыков нет.</p>'}</div>
       <aside class="detail">${status(selected)}<h2>${selected.skill.title}</h2><p>${selected.skill.description}</p>${levelPath(selected)}
+        <div class="detail-section detail-next-step"><span class="label">Следующий шаг</span><p>${nextStep(selected, unresolvedDependencies)}</p></div>
+        <div class="detail-section"><span class="label">Опирается на</span>${dependenciesHtml}</div>
+        <div class="detail-section"><span class="label">Разблокирует</span>${unlocksHtml}</div>
         <div class="detail-section"><span class="label">Следующее evidence</span><p>${nextEvidence(selected.skill.min)}</p></div>
         ${selected.entry?.note ? `<div class="detail-section"><span class="label">Почему CURRENT такой</span><p>${selected.entry.note}</p></div>` : ''}
         <div class="detail-section"><span class="label">Evidence</span>${ev}</div>
