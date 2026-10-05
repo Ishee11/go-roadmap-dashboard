@@ -221,7 +221,7 @@ function unlocksOf(item) {
   return evaluated.filter(candidate =>
     (candidate.skill.depends_on ?? [])
       .map(normalizeDependency)
-      .some(dependency => dependency.id === item.skill.id)
+      .some(dependency => dependency.id === item.skill.id && dependency.gate === 'hard')
   );
 }
 
