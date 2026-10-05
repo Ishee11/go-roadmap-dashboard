@@ -252,7 +252,9 @@ skills:
     min: understanding.contextualization
     target: analysis.defects
     depends_on:
-      - concurrency.goroutine-lifecycle
+      - id: concurrency.goroutine-lifecycle
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.goroutine-leaks
     block: concurrency
     group: goroutines
@@ -261,9 +263,13 @@ skills:
     min: understanding.contextualization
     target: analysis.defects
     depends_on:
-      - concurrency.goroutine-lifecycle
-      - concurrency.goroutine-ownership-termination
-      - concurrency.channels-semantics
+      - id: concurrency.goroutine-lifecycle
+        gate: soft
+      - id: concurrency.goroutine-ownership-termination
+        gate: hard
+        required: understanding.explanation
+      - id: concurrency.channels-semantics
+        gate: soft
   - id: concurrency.data-race
     block: concurrency
     group: shared-state
@@ -272,7 +278,9 @@ skills:
     min: application.independent
     target: analysis.defects
     depends_on:
-      - concurrency.goroutine-lifecycle
+      - id: concurrency.goroutine-lifecycle
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.race-detector
     block: concurrency
     group: shared-state
@@ -281,7 +289,9 @@ skills:
     min: application.template
     target: application.independent
     depends_on:
-      - concurrency.data-race
+      - id: concurrency.data-race
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.waitgroup
     block: concurrency
     group: shared-state
@@ -290,7 +300,9 @@ skills:
     min: application.independent
     target: analysis.defects
     depends_on:
-      - concurrency.goroutine-lifecycle
+      - id: concurrency.goroutine-lifecycle
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.mutex
     block: concurrency
     group: shared-state
@@ -299,7 +311,9 @@ skills:
     min: application.independent
     target: evaluation.comparison
     depends_on:
-      - concurrency.data-race
+      - id: concurrency.data-race
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.rwmutex
     block: concurrency
     group: shared-state
@@ -308,7 +322,9 @@ skills:
     min: understanding.contextualization
     target: evaluation.comparison
     depends_on:
-      - concurrency.mutex
+      - id: concurrency.mutex
+        gate: hard
+        required: application.template
   - id: concurrency.atomic
     block: concurrency
     group: shared-state
@@ -317,7 +333,9 @@ skills:
     min: understanding.contextualization
     target: application.variable
     depends_on:
-      - concurrency.data-race
+      - id: concurrency.data-race
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.channels-semantics
     block: concurrency
     group: channels
@@ -326,7 +344,9 @@ skills:
     min: application.independent
     target: analysis.defects
     depends_on:
-      - concurrency.goroutine-lifecycle
+      - id: concurrency.goroutine-lifecycle
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.channel-lifecycle
     block: concurrency
     group: channels
@@ -335,8 +355,11 @@ skills:
     min: application.independent
     target: analysis.defects
     depends_on:
-      - concurrency.channels-semantics
-      - concurrency.goroutine-ownership-termination
+      - id: concurrency.channels-semantics
+        gate: hard
+        required: understanding.contextualization
+      - id: concurrency.goroutine-ownership-termination
+        gate: soft
   - id: concurrency.nil-directional-channels
     block: concurrency
     group: channels
@@ -345,7 +368,9 @@ skills:
     min: understanding.explanation
     target: application.variable
     depends_on:
-      - concurrency.channels-semantics
+      - id: concurrency.channels-semantics
+        gate: hard
+        required: understanding.explanation
   - id: concurrency.select
     block: concurrency
     group: channels
@@ -354,7 +379,9 @@ skills:
     min: application.independent
     target: analysis.defects
     depends_on:
-      - concurrency.channels-semantics
+      - id: concurrency.channels-semantics
+        gate: hard
+        required: understanding.contextualization
   - id: concurrency.context
     block: concurrency
     group: patterns
@@ -363,8 +390,11 @@ skills:
     min: application.independent
     target: analysis.defects
     depends_on:
-      - concurrency.goroutine-ownership-termination
-      - concurrency.select
+      - id: concurrency.goroutine-ownership-termination
+        gate: hard
+        required: understanding.contextualization
+      - id: concurrency.select
+        gate: soft
   - id: concurrency.deadlock
     block: concurrency
     group: shared-state
@@ -373,8 +403,10 @@ skills:
     min: understanding.contextualization
     target: analysis.defects
     depends_on:
-      - concurrency.mutex
-      - concurrency.channels-semantics
+      - id: concurrency.mutex
+        gate: soft
+      - id: concurrency.channels-semantics
+        gate: soft
   - id: concurrency.worker-pool
     block: concurrency
     group: patterns
@@ -383,10 +415,16 @@ skills:
     min: application.variable
     target: synthesis.combination
     depends_on:
-      - concurrency.goroutine-lifecycle
-      - concurrency.channels-semantics
-      - concurrency.waitgroup
-      - concurrency.context
+      - id: concurrency.goroutine-lifecycle
+        gate: soft
+      - id: concurrency.channels-semantics
+        gate: hard
+        required: application.template
+      - id: concurrency.waitgroup
+        gate: hard
+        required: application.template
+      - id: concurrency.context
+        gate: soft
   - id: concurrency.bounded-concurrency
     block: concurrency
     group: patterns
@@ -395,8 +433,11 @@ skills:
     min: understanding.contextualization
     target: application.independent
     depends_on:
-      - concurrency.goroutine-lifecycle
-      - concurrency.channels-semantics
+      - id: concurrency.goroutine-lifecycle
+        gate: hard
+        required: understanding.explanation
+      - id: concurrency.channels-semantics
+        gate: soft
   - id: concurrency.backpressure
     block: concurrency
     group: patterns
@@ -405,8 +446,11 @@ skills:
     min: understanding.contextualization
     target: analysis.patterns
     depends_on:
-      - concurrency.channels-semantics
-      - concurrency.bounded-concurrency
+      - id: concurrency.channels-semantics
+        gate: hard
+        required: understanding.contextualization
+      - id: concurrency.bounded-concurrency
+        gate: soft
   - id: concurrency.graceful-shutdown
     block: concurrency
     group: patterns
@@ -415,10 +459,14 @@ skills:
     min: application.template
     target: synthesis.combination
     depends_on:
-      - concurrency.goroutine-ownership-termination
-      - concurrency.context
-      - concurrency.waitgroup
-
+      - id: concurrency.goroutine-ownership-termination
+        gate: hard
+        required: understanding.contextualization
+      - id: concurrency.context
+        gate: hard
+        required: application.template
+      - id: concurrency.waitgroup
+        gate: soft
   - id: sql-postgresql.query-basics
     block: sql-postgresql
     group: querying
