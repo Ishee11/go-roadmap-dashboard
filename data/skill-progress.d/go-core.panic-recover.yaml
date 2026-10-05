@@ -1,0 +1,6 @@
+updated_at: '2026-10-05'
+current: {level: understanding, stage: contextualization, confirmation: provisional}
+evidence:
+  - {ref: sessions/2026-10-05-panic-recover-goroutine.md, type: mixed_coding, date: '2026-10-05'}
+  - {ref: knowledge/panic-recover.yaml, type: mixed, date: '2026-10-05'}
+note: 'После замечаний исправил runSafely и самостоятельно поставил recover внутри дочерней goroutine после объяснения независимых стеков. Границы panic/recover первоначально объяснял неверно; требуется новая самостоятельная проверка модели. MIN пока needs_confirmation; запуск и тесты не наблюдались.'
