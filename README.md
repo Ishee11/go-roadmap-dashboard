@@ -6,7 +6,8 @@ The private repository `Ishee11/go-learning-roadmap` remains the source of truth
 
 - the static dashboard UI;
 - `data/catalogs.yaml` — manifest of priority layers shown by the dashboard;
-- `data/skills.yaml` and `data/skill-progress.yaml` — public P0 catalog/progress;
+- `data/skills.yaml` and `data/skill-progress.yaml` — public P0 catalog/base progress;
+- `data/skill-progress.d/manifest.yaml` and the listed per-skill YAML files — public P0 updates overriding the base snapshot;
 - `data/skills-p1.yaml` and `data/skill-progress-p1.yaml` — public P1 catalog/progress;
 - `data/experience.yaml` — public snapshot of experience-based practical targets and their current status.
 
@@ -30,4 +31,4 @@ No build step, backend, database, or GitHub Actions are required. The site reads
 
 ## Updating
 
-After a learning session, update the private source of truth first. Then sync only the intentionally public manifest/catalog/progress snapshots into `data/` here. Experience targets are synced separately into `data/experience.yaml`.
+After a learning session, update the private source of truth first. For P0, copy each changed `data/skill-progress.d/<skill-id>.yaml` to the same public path and add the skill ID to `data/skill-progress.d/manifest.yaml`. The browser loads that manifest and merges the public shards over `data/skill-progress.yaml`; do not copy private session/knowledge contents. For other changes, sync only intentionally public snapshots into `data/`. Experience targets are synced separately into `data/experience.yaml`.
