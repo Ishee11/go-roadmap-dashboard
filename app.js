@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-06-1';
+const DATA_VERSION = '2026-10-06-2';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -119,6 +119,8 @@ function gapItems(items = scopedItems()) {
   return items
     .filter(x => x.skill.min != null && x.minStatus !== 'min_met' && !x.targetMet)
     .sort((a, b) => {
+      const lockDiff = Number(isLocked(a)) - Number(isLocked(b));
+      if (lockDiff) return lockDiff;
       const weight = x => x.minStatus === 'needs_confirmation' ? 0 : (x.entry ? 1 : 2);
       const wd = weight(a) - weight(b);
       if (wd) return wd;
@@ -184,26 +186,78 @@ function nextEvidence(code) {
   return 'Самостоятельно воспроизвести ключевую модель без подсказки.';
 }
 
-function dependencyReady(item) {
-  return item.targetMet || item.minStatus === 'min_met' || item.minStatus === 'not_required';
+function normalizeDependency(dependency) {
+  return typeof dependency === 'string'
+    ? { id: dependency, gate: 'soft' }
+    : dependency;
+}
+
+function dependencyState(relation, item) {
+  const requiredCode = relation.required ?? (relation.gate === 'hard' ? item.skill.min : null);
+  if (!requiredCode) return { requiredCode, satisfied: true };
+  return {
+    requiredCode,
+    satisfied: Boolean(
+      item.entry &&
+      item.entry.current.confirmation === 'confirmed' &&
+      item.currentRank >= rankOf(requiredCode)
+    ),
+  };
 }
 
 function dependenciesOf(item) {
-  return (item.skill.depends_on ?? []).map(id => byId.get(id)).filter(Boolean);
+  return (item.skill.depends_on ?? [])
+    .map(normalizeDependency)
+    .map(relation => {
+      const dependency = byId.get(relation.id);
+      if (!dependency) return null;
+      const state = dependencyState(relation, dependency);
+      return { relation, item: dependency, requiredCode: state.requiredCode, satisfied: state.satisfied };
+    })
+    .filter(Boolean);
 }
 
 function unlocksOf(item) {
-  return evaluated.filter(candidate => candidate.skill.depends_on?.includes(item.skill.id));
+  return evaluated.filter(candidate =>
+    (candidate.skill.depends_on ?? [])
+      .map(normalizeDependency)
+      .some(dependency => dependency.id === item.skill.id)
+  );
+}
+
+function hardBlockersOf(item) {
+  if (item.targetMet || item.minStatus === 'min_met' || item.minStatus === 'not_required') return [];
+  return dependenciesOf(item).filter(dependency =>
+    dependency.relation.gate === 'hard' && !dependency.satisfied
+  );
+}
+
+function isLocked(item) {
+  return hardBlockersOf(item).length > 0;
 }
 
 function nextStep(item, blockers) {
-  if (blockers.length) return `Сначала проверить prerequisite: ${blockers[0].skill.title} — ${statusMeta(blockers[0])[0]}.`;
+  if (blockers.length) {
+    const blocker = blockers[0];
+    return `Заблокировано: сначала ${blocker.item.skill.title} до уровня ${labelOf(blocker.requiredCode)}.`;
+  }
   if (item.targetMet) return 'TARGET подтверждён: удерживать навык интервальными проверками.';
   if (item.minStatus === 'unassessed') return 'Frontier Check: определить фактический CURRENT до уровня MIN.';
   if (item.minStatus === 'needs_confirmation') return 'Новая независимая проверка для подтверждения текущего уровня.';
   if (item.minStatus === 'below_min') return 'Практика от текущего уровня к MIN без повторного прохождения уже подтверждённого.';
   if (item.minStatus === 'min_met') return 'MIN закрыт: следующий шаг — движение к TARGET по приоритету.';
   return 'Навык не блокирует MIN; углубление можно отложить.';
+}
+
+function dependencyRelationHtml(dependency) {
+  const blocking = dependency.relation.gate === 'hard' && !dependency.satisfied;
+  const meta = dependency.relation.gate === 'hard'
+    ? `hard · нужно: ${labelOf(dependency.requiredCode)} · ${dependency.satisfied ? 'gate открыт' : 'блокирует'}`
+    : 'soft dependency';
+  return `<button class="relation-item ${blocking ? 'is-blocking' : ''}" data-skill="${dependency.item.skill.id}" data-block="${dependency.item.skill.block}">
+    <span class="relation-copy"><strong>${blocking ? '🔒 ' : ''}${dependency.item.skill.title}</strong><small>${meta}</small></span>
+    ${status(dependency.item)}
+  </button>`;
 }
 
 function relationHtml(item) {
@@ -311,7 +365,7 @@ function render() {
   const suggested = gaps[0] ?? items[0];
   const selectedDependencies = selected ? dependenciesOf(selected) : [];
   const selectedUnlocks = selected ? unlocksOf(selected) : [];
-  const unresolvedDependencies = selectedDependencies.filter(item => !dependencyReady(item));
+  const selectedHardBlockers = selected ? hardBlockersOf(selected) : [];
 
   if (!selectedBlock || !selected || !suggested) {
     app.innerHTML = '<p class="loading">Для выбранного приоритета пока нет навыков.</p>';
@@ -336,13 +390,13 @@ function render() {
     if (!groupItems.length) return '';
     return `<section class="group"><h3>${group.title}</h3><div class="skill-list">${groupItems.map(item => `
       <button class="skill ${item.skill.id === selectedSkillId ? 'active' : ''}" data-skill="${item.skill.id}">
-        <span class="skill-title"><strong>${item.skill.title}</strong><span>${item.skill.description}</span></span>
+        <span class="skill-title"><strong>${item.skill.title}${isLocked(item) ? '<span class="skill-lock" title="Навык заблокирован hard prerequisite" aria-label="Заблокирован">🔒</span>' : ''}</strong><span>${item.skill.description}</span></span>
         <span class="current">${labelOf(item.current)}</span>${status(item)}
       </button>`).join('')}</div></section>`;
   }).join('');
 
   const dependenciesHtml = selectedDependencies.length
-    ? `<div class="relation-list">${selectedDependencies.map(relationHtml).join('')}</div>`
+    ? `<div class="relation-list">${selectedDependencies.map(dependencyRelationHtml).join('')}</div>`
     : '<p class="relation-empty">Прямые prerequisites не заданы.</p>';
   const unlocksHtml = selectedUnlocks.length
     ? `<div class="relation-list">${selectedUnlocks.map(relationHtml).join('')}</div>`
@@ -373,7 +427,7 @@ function render() {
     <section class="layout section">
       <div class="panel"><div class="toolbar"><div><span class="eyebrow">Roadmap · ${priority}</span><h2 class="section-title">${selectedBlock.title}</h2></div><div class="filters">${[['all','Все'],['gaps','Ниже MIN'],['confirm','Подтвердить'],['min','MIN'],['target','TARGET']].map(([v,t]) => `<button data-filter="${v}" class="${filter === v ? 'active' : ''}">${t}</button>`).join('')}</div></div>${groupsHtml || '<p style="color:var(--muted)">В этом фильтре навыков нет.</p>'}</div>
       <aside class="detail">${status(selected)}<h2>${selected.skill.title}</h2><p>${selected.skill.description}</p>${levelPath(selected)}
-        <div class="detail-section detail-next-step"><span class="label">Следующий шаг</span><p>${nextStep(selected, unresolvedDependencies)}</p></div>
+        <div class="detail-section detail-next-step"><span class="label">Следующий шаг</span><p>${nextStep(selected, selectedHardBlockers)}</p></div>
         <div class="detail-section"><span class="label">Опирается на</span>${dependenciesHtml}</div>
         <div class="detail-section"><span class="label">Разблокирует</span>${unlocksHtml}</div>
         <div class="detail-section"><span class="label">Следующее evidence</span><p>${nextEvidence(selected.skill.min)}</p></div>
