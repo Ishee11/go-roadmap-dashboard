@@ -267,7 +267,7 @@ skills:
         gate: soft
       - id: concurrency.goroutine-ownership-termination
         gate: hard
-        required: understanding.explanation
+        required: understanding.contextualization
       - id: concurrency.channels-semantics
         gate: soft
   - id: concurrency.data-race
