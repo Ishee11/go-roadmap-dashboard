@@ -1,0 +1,8 @@
+updated_at: '2026-10-05'
+current: {level: application, stage: independent, confirmation: confirmed}
+evidence:
+  - {ref: knowledge/defer.yaml, type: mixed}
+  - {ref: sessions/2026-09-18-defer-diagnostic.md, type: mixed, date: '2026-09-18'}
+  - {ref: sessions/2026-10-01-defer-resource-cleanup-review.md, type: guided_coding, date: '2026-10-01'}
+  - {ref: sessions/2026-10-05-defer-read-data-independent.md, type: independent_coding, date: '2026-10-05'}
+note: '2026-10-05 самостоятельно написал readData с named err и приоритетом ошибки чтения над Close, затем readFiles/readPath с закрытием файла на каждой итерации. MIN application.independent подтверждён чтением кода; запуск и тесты остаются для повторения.'
