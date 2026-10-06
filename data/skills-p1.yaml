@@ -139,8 +139,8 @@ skills:
   - id: observability-performance.pprof-benchmarks
     block: observability-performance
     group: diagnostics
-    title: Go pprof and benchmarks
-    description: CPU/heap/goroutine profiles, go test -bench/-benchmem, поиск bottleneck и проверка влияния изменения
+    title: Go pprof profiling
+    description: CPU/heap/goroutine profiles, поиск bottleneck и проверка гипотезы профилем; benchmark mechanics вынесены в P0 testing-benchmarks.go-benchmarks
     min: application.template
     target: application.independent
   - id: observability-performance.measurement-experiment
