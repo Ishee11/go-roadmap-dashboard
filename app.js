@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-06-6';
+const DATA_VERSION = '2026-10-06-7';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -49,7 +49,14 @@ if (p0Layer) {
     update: await fetchYaml(`./data/skill-progress.d/${skillId}.yaml`),
   })));
   for (const { skillId, update } of shardEntries) {
-    if (!update?.current || !Array.isArray(update.evidence)) {
+    const validDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+    const validReview = !update?.review || (
+      validDate(update.review.last_at) &&
+      validDate(update.review.next_at) &&
+      Number.isInteger(update.review.interval_days) &&
+      update.review.interval_days >= 1
+    );
+    if (!update?.current || !Array.isArray(update.evidence) || !validReview) {
       throw new Error(`Invalid skill progress update: ${skillId}`);
     }
     const { updated_at, ...entry } = update;
@@ -236,6 +243,46 @@ function isLocked(item) {
   return hardBlockersOf(item).length > 0;
 }
 
+function localTodayIso() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function dayDistance(from, to) {
+  const [fy, fm, fd] = from.split('-').map(Number);
+  const [ty, tm, td] = to.split('-').map(Number);
+  return Math.round((Date.UTC(ty, tm - 1, td) - Date.UTC(fy, fm - 1, fd)) / 86400000);
+}
+
+function reviewState(item, today = localTodayIso()) {
+  const nextAt = item.entry?.review?.next_at;
+  if (!nextAt) return 'none';
+  if (nextAt < today) return 'overdue';
+  if (nextAt === today) return 'due';
+  return 'upcoming';
+}
+
+function reviewStatusText(item, today = localTodayIso()) {
+  const nextAt = item.entry?.review?.next_at;
+  if (!nextAt) return 'Не назначено';
+  const distance = dayDistance(today, nextAt);
+  if (distance < 0) return `Просрочено на ${Math.abs(distance)} дн.`;
+  if (distance === 0) return 'Нужно повторить сегодня';
+  return `Через ${distance} дн.`;
+}
+
+function formatReviewDate(value) {
+  if (!value) return '—';
+  const [year, month, day] = value.split('-').map(Number);
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(year, month - 1, day));
+}
 function nextStep(item, blockers) {
   if (blockers.length) {
     const blocker = blockers[0];
@@ -247,9 +294,11 @@ function nextStep(item, blockers) {
       ? `Исправить misconception через theory_first: ${issue.summary}`
       : `Закрыть gap: ${issue.summary}`;
   }
+  if (item.minStatus === 'needs_confirmation') return 'Transfer Check: применить тот же принцип в другом контексте без подсказок.';
+  const reviewStateNow = reviewState(item);
+  if (reviewStateNow === 'due' || reviewStateNow === 'overdue') return 'Интервальное повторение: новая активная проверка без перечитывания конспекта.';
   if (item.targetMet) return 'TARGET подтверждён: удерживать навык интервальными проверками.';
   if (item.minStatus === 'unassessed') return 'Frontier Check: определить фактический CURRENT до уровня MIN.';
-  if (item.minStatus === 'needs_confirmation') return 'Transfer Check: применить тот же принцип в другом контексте без подсказок.';
   if (item.minStatus === 'below_min') return 'Практика от текущего уровня к MIN без повторного прохождения уже подтверждённого.';
   if (item.minStatus === 'min_met') return 'MIN закрыт: следующий шаг — движение к TARGET по приоритету.';
   return 'Навык не блокирует MIN; углубление можно отложить.';
@@ -301,6 +350,10 @@ function visible(item) {
   if (filter === 'all') return true;
   if (filter === 'gaps') return ['below_min', 'unassessed'].includes(item.minStatus);
   if (filter === 'confirm') return item.minStatus === 'needs_confirmation';
+  if (filter === 'review') {
+    const state = reviewState(item);
+    return state === 'due' || state === 'overdue';
+  }
   if (filter === 'min') return item.minStatus === 'min_met' && !item.targetMet;
   if (filter === 'target') return item.targetMet;
   return true;
