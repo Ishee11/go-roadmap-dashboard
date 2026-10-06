@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-06-5';
+const DATA_VERSION = '2026-10-06-6';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -271,6 +271,12 @@ function relationHtml(item) {
 }
 
 function nextEvidenceFor(item) {
+  if (item.entry?.active_issue?.type === 'misconception') {
+    return 'Нужно самостоятельно объяснить исправленную причинную модель и применить её на новом примере.';
+  }
+  if (item.entry?.active_issue?.type === 'gap') {
+    return 'Нужно закрыть недостающий фрагмент и затем продемонстрировать его без существенной подсказки.';
+  }
   if (item.minStatus === 'needs_confirmation') {
     return 'Transfer Check: новая формулировка или другой сюжет с тем же скрытым принципом, без подсказки на механизм.';
   }
