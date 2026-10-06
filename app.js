@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-06-8';
+const DATA_VERSION = '2026-10-06-9';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -159,14 +159,17 @@ function compareStudyPriority(a, b, items, today) {
     if (aDate !== bDate) return aDate.localeCompare(bDate);
   }
 
+  const deficit = item => {
+    if (!item.entry) return 999;
+    return item.minRank == null ? 999 : Math.max(0, item.minRank - item.currentRank);
+  };
+  const deficitDiff = deficit(a) - deficit(b);
+  if (deficitDiff) return deficitDiff;
+
   if (tier === 2) {
     const unlockDiff = openHardUnlockCount(b, items) - openHardUnlockCount(a, items);
     if (unlockDiff) return unlockDiff;
   }
-
-  const deficit = item => item.minRank == null ? 999 : Math.max(0, item.minRank - item.currentRank);
-  const deficitDiff = deficit(a) - deficit(b);
-  if (deficitDiff) return deficitDiff;
 
   const blockDiff = (blockOrder.get(a.skill.block) ?? 99) - (blockOrder.get(b.skill.block) ?? 99);
   if (blockDiff) return blockDiff;
