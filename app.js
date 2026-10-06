@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-06-3';
+const DATA_VERSION = '2026-10-06-4';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -243,7 +243,7 @@ function nextStep(item, blockers) {
   }
   if (item.targetMet) return 'TARGET подтверждён: удерживать навык интервальными проверками.';
   if (item.minStatus === 'unassessed') return 'Frontier Check: определить фактический CURRENT до уровня MIN.';
-  if (item.minStatus === 'needs_confirmation') return 'Новая независимая проверка для подтверждения текущего уровня.';
+  if (item.minStatus === 'needs_confirmation') return 'Transfer Check: применить тот же принцип в другом контексте без подсказок.';
   if (item.minStatus === 'below_min') return 'Практика от текущего уровня к MIN без повторного прохождения уже подтверждённого.';
   if (item.minStatus === 'min_met') return 'MIN закрыт: следующий шаг — движение к TARGET по приоритету.';
   return 'Навык не блокирует MIN; углубление можно отложить.';
@@ -262,6 +262,13 @@ function dependencyRelationHtml(dependency) {
 
 function relationHtml(item) {
   return `<button class="relation-item" data-skill="${item.skill.id}" data-block="${item.skill.block}"><strong>${item.skill.title}</strong>${status(item)}</button>`;
+}
+
+function nextEvidenceFor(item) {
+  if (item.minStatus === 'needs_confirmation') {
+    return 'Transfer Check: новая формулировка или другой сюжет с тем же скрытым принципом, без подсказки на механизм.';
+  }
+  return nextEvidence(item.skill.min);
 }
 
 function blockStats(block, items) {
@@ -422,7 +429,7 @@ function render() {
       <article class="metric"><span class="eyebrow">TARGET coverage</span><strong class="big">${targetMet}/${items.length}</strong><p>${pct(targetMet, items.length)}% навыков дошли до целевого уровня</p></article>
       <article class="metric"><span class="eyebrow">Открытые MIN</span><strong class="big">${required.length - minMet}</strong><p>из них ${needsConfirmation} требуют короткого подтверждения</p></article>
     </section>
-    <section class="focus"><div><span class="eyebrow">Ближайший gap · ${priority}</span><h2>${suggested.skill.title}</h2><p>${suggested.skill.description}</p></div>${levelPath(suggested)}<div class="focus-next"><span class="label">Следующее evidence</span><strong>${nextEvidence(suggested.skill.min)}</strong></div></section>
+    <section class="focus"><div><span class="eyebrow">Ближайший gap · ${priority}</span><h2>${suggested.skill.title}</h2><p>${suggested.skill.description}</p></div>${levelPath(suggested)}<div class="focus-next"><span class="label">Следующее evidence</span><strong>${nextEvidenceFor(suggested)}</strong></div></section>
     <section class="section card" style="padding:24px"><div class="section-head"><div><span class="eyebrow">${priority} blocks</span><h2 class="section-title">Карта готовности</h2></div><p>Приоритеты считаются отдельно: P1 не снижает P0 readiness.</p></div><div class="blocks">${blocksHtml}</div></section>
     <section class="layout section">
       <div class="panel"><div class="toolbar"><div><span class="eyebrow">Roadmap · ${priority}</span><h2 class="section-title">${selectedBlock.title}</h2></div><div class="filters">${[['all','Все'],['gaps','Ниже MIN'],['confirm','Подтвердить'],['min','MIN'],['target','TARGET']].map(([v,t]) => `<button data-filter="${v}" class="${filter === v ? 'active' : ''}">${t}</button>`).join('')}</div></div>${groupsHtml || '<p style="color:var(--muted)">В этом фильтре навыков нет.</p>'}</div>
@@ -430,7 +437,7 @@ function render() {
         <div class="detail-section detail-next-step"><span class="label">Следующий шаг</span><p>${nextStep(selected, selectedHardBlockers)}</p></div>
         <div class="detail-section"><span class="label">Опирается на</span>${dependenciesHtml}</div>
         <div class="detail-section"><span class="label">Разблокирует</span>${unlocksHtml}</div>
-        <div class="detail-section"><span class="label">Следующее evidence</span><p>${nextEvidence(selected.skill.min)}</p></div>
+        <div class="detail-section"><span class="label">Следующее evidence</span><p>${nextEvidenceFor(selected)}</p></div>
         ${selected.entry?.note ? `<div class="detail-section"><span class="label">Почему CURRENT такой</span><p>${selected.entry.note}</p></div>` : ''}
         <div class="detail-section"><span class="label">Evidence</span>${ev}</div>
       </aside>
