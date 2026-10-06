@@ -438,6 +438,7 @@ function render() {
   const selectedDependencies = selected ? dependenciesOf(selected) : [];
   const selectedUnlocks = selected ? unlocksOf(selected) : [];
   const selectedHardBlockers = selected ? hardBlockersOf(selected) : [];
+  const today = localTodayIso();
 
   if (!selectedBlock || !selected || !suggested) {
     app.innerHTML = '<p class="loading">Для выбранного приоритета пока нет навыков.</p>';
@@ -448,6 +449,11 @@ function render() {
   const minMet = required.filter(x => x.targetMet || x.minStatus === 'min_met').length;
   const targetMet = items.filter(x => x.targetMet).length;
   const needsConfirmation = required.filter(x => x.minStatus === 'needs_confirmation').length;
+  const selectedBlockItems = items.filter(x => x.skill.block === selectedBlock.id);
+  const dueReviewCount = selectedBlockItems.filter(item => {
+    const state = reviewState(item, today);
+    return state === 'due' || state === 'overdue';
+  }).length;
 
   const blocksHtml = blocks.map(block => {
     const s = blockStats(block, items);
@@ -474,6 +480,19 @@ function render() {
     ? `<div class="relation-list">${selectedUnlocks.map(relationHtml).join('')}</div>`
     : '<p class="relation-empty">Прямых downstream-навыков пока не размечено.</p>';
 
+  const reviewHtml = selected.entry?.review
+    ? `<div class="detail-section review-section review-${reviewState(selected, today)}">
+        <span class="label">Повторение</span>
+        <div class="review-heading">
+          <strong>${reviewStatusText(selected, today)}</strong>
+          <span>${formatReviewDate(selected.entry.review.next_at)}</span>
+        </div>
+        <p>Последнее: ${formatReviewDate(selected.entry.review.last_at)} · интервал: ${selected.entry.review.interval_days} дн.</p>
+      </div>`
+    : `<div class="detail-section review-section review-none">
+        <span class="label">Повторение</span>
+        <p>Не назначено. Появится после следующей содержательной проверки этого skill.</p>
+      </div>`;
   const activeIssueHtml = selected.entry?.active_issue
     ? `<div class="detail-section active-issue">
         <span class="label">Активное слабое место</span>
@@ -509,9 +528,10 @@ function render() {
     <section class="focus"><div><span class="eyebrow">Ближайший gap · ${priority}</span><h2>${suggested.skill.title}</h2><p>${suggested.skill.description}</p></div>${levelPath(suggested)}<div class="focus-next"><span class="label">Следующее evidence</span><strong>${nextEvidenceFor(suggested)}</strong></div></section>
     <section class="section card" style="padding:24px"><div class="section-head"><div><span class="eyebrow">${priority} blocks</span><h2 class="section-title">Карта готовности</h2></div><p>Приоритеты считаются отдельно: P1 не снижает P0 readiness.</p></div><div class="blocks">${blocksHtml}</div></section>
     <section class="layout section">
-      <div class="panel"><div class="toolbar"><div><span class="eyebrow">Roadmap · ${priority}</span><h2 class="section-title">${selectedBlock.title}</h2></div><div class="filters">${[['all','Все'],['gaps','Ниже MIN'],['confirm','Подтвердить'],['min','MIN'],['target','TARGET']].map(([v,t]) => `<button data-filter="${v}" class="${filter === v ? 'active' : ''}">${t}</button>`).join('')}</div></div>${groupsHtml || '<p style="color:var(--muted)">В этом фильтре навыков нет.</p>'}</div>
+      <div class="panel"><div class="toolbar"><div><span class="eyebrow">Roadmap · ${priority}</span><h2 class="section-title">${selectedBlock.title}</h2></div><div class="filters">${[['all','Все'],['gaps','Ниже MIN'],['confirm','Подтвердить'],['review', dueReviewCount ? `Повторить · ${dueReviewCount}` : 'Повторить'],['min','MIN'],['target','TARGET']].map(([v,t]) => `<button data-filter="${v}" class="${filter === v ? 'active' : ''}">${t}</button>`).join('')}</div></div>${groupsHtml || '<p style="color:var(--muted)">В этом фильтре навыков нет.</p>'}</div>
       <aside class="detail">${status(selected)}<h2>${selected.skill.title}</h2><p>${selected.skill.description}</p>${levelPath(selected)}
         <div class="detail-section detail-next-step"><span class="label">Следующий шаг</span><p>${nextStep(selected, selectedHardBlockers)}</p></div>
+        ${reviewHtml}
         ${activeIssueHtml}
         <div class="detail-section"><span class="label">Опирается на</span>${dependenciesHtml}</div>
         <div class="detail-section"><span class="label">Разблокирует</span>${unlocksHtml}</div>
