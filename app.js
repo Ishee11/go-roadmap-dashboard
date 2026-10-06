@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-06-7';
+const DATA_VERSION = '2026-10-06-8';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -105,6 +105,7 @@ function evaluate(skill) {
 const evaluated = catalog.skills.map(evaluate);
 const byId = new Map(evaluated.map(x => [x.skill.id, x]));
 const blockOrder = new Map(catalog.blocks.map((b, i) => [b.id, i]));
+const skillOrder = new Map(catalog.skills.map((skill, i) => [skill.id, i]));
 const priorities = layerData.map(layer => layer.meta.priority);
 const tabs = [...priorities, 'experience'];
 
@@ -122,30 +123,109 @@ function scopedBlocks() {
   return catalog.blocks.filter(block => ids.has(block.id));
 }
 
+function hasOpenMinimum(item) {
+  return item.skill.min != null && item.minStatus !== 'min_met' && !item.targetMet;
+}
+
+function openHardUnlockCount(item, items) {
+  return items.filter(candidate =>
+    hasOpenMinimum(candidate) &&
+    (candidate.skill.depends_on ?? [])
+      .map(normalizeDependency)
+      .some(dependency => dependency.id === item.skill.id && dependency.gate === 'hard')
+  ).length;
+}
+
+function studyPriorityTier(item, items, today) {
+  if (hasOpenMinimum(item) && isLocked(item)) return 99;
+  const review = reviewState(item, today);
+  if (review === 'due' || review === 'overdue') return 0;
+  if (item.entry?.active_issue?.type === 'misconception') return 1;
+  if (hasOpenMinimum(item) && openHardUnlockCount(item, items) > 0) return 2;
+  if (item.minStatus === 'needs_confirmation') return 3;
+  if (item.minStatus === 'below_min') return 4;
+  if (item.minStatus === 'unassessed') return 5;
+  return 6;
+}
+
+function compareStudyPriority(a, b, items, today) {
+  const tierDiff = studyPriorityTier(a, items, today) - studyPriorityTier(b, items, today);
+  if (tierDiff) return tierDiff;
+
+  const tier = studyPriorityTier(a, items, today);
+  if (tier === 0) {
+    const aDate = a.entry?.review?.next_at ?? '9999-12-31';
+    const bDate = b.entry?.review?.next_at ?? '9999-12-31';
+    if (aDate !== bDate) return aDate.localeCompare(bDate);
+  }
+
+  if (tier === 2) {
+    const unlockDiff = openHardUnlockCount(b, items) - openHardUnlockCount(a, items);
+    if (unlockDiff) return unlockDiff;
+  }
+
+  const deficit = item => item.minRank == null ? 999 : Math.max(0, item.minRank - item.currentRank);
+  const deficitDiff = deficit(a) - deficit(b);
+  if (deficitDiff) return deficitDiff;
+
+  const blockDiff = (blockOrder.get(a.skill.block) ?? 99) - (blockOrder.get(b.skill.block) ?? 99);
+  if (blockDiff) return blockDiff;
+  return (skillOrder.get(a.skill.id) ?? 999) - (skillOrder.get(b.skill.id) ?? 999);
+}
+
+function studyPriorityReason(item, items, today) {
+  const review = reviewState(item, today);
+  if (review === 'overdue') return 'Просроченное интервальное повторение.';
+  if (review === 'due') return 'Интервальное повторение назначено на сегодня.';
+  if (item.entry?.active_issue?.type === 'misconception') {
+    return 'Активный misconception: сначала нужно исправить причинную модель.';
+  }
+  const unlockCount = openHardUnlockCount(item, items);
+  if (hasOpenMinimum(item) && unlockCount > 0) {
+    return `Hard prerequisite для ${unlockCount} незакрытых skills этого слоя.`;
+  }
+  if (item.minStatus === 'needs_confirmation') {
+    return 'MIN уже достигнут предварительно: выгоднее закрыть Transfer Check.';
+  }
+  if (item.minStatus === 'below_min') {
+    return 'Разблокированный gap ниже MIN; среди равных выбран ближайший к MIN.';
+  }
+  if (item.minStatus === 'unassessed') return 'Не проверено: следующий шаг — Frontier Check.';
+  return 'Поддерживающее повторение подтверждённого навыка.';
+}
+
 function gapItems(items = scopedItems()) {
+  const today = localTodayIso();
   return items
-    .filter(x => x.skill.min != null && x.minStatus !== 'min_met' && !x.targetMet)
-    .sort((a, b) => {
-      const lockDiff = Number(isLocked(a)) - Number(isLocked(b));
-      if (lockDiff) return lockDiff;
-      const weight = x => x.minStatus === 'needs_confirmation' ? 0 : (x.entry ? 1 : 2);
-      const wd = weight(a) - weight(b);
-      if (wd) return wd;
-      const da = Math.max(0, (a.minRank ?? 999) - a.currentRank);
-      const db = Math.max(0, (b.minRank ?? 999) - b.currentRank);
-      if (da !== db) return da - db;
-      return (blockOrder.get(a.skill.block) ?? 99) - (blockOrder.get(b.skill.block) ?? 99);
-    });
+    .filter(hasOpenMinimum)
+    .sort((a, b) => compareStudyPriority(a, b, items, today));
+}
+
+function studyItems(items = scopedItems()) {
+  const today = localTodayIso();
+  return items
+    .filter(item => {
+      const review = reviewState(item, today);
+      const dueReview = review === 'due' || review === 'overdue';
+      const misconception = item.entry?.active_issue?.type === 'misconception';
+      const openMinimum = hasOpenMinimum(item);
+      if (!dueReview && !misconception && !openMinimum) return false;
+      if (openMinimum && isLocked(item)) return false;
+      return true;
+    })
+    .sort((a, b) => compareStudyPriority(a, b, items, today));
 }
 
 function ensureSelection() {
   const items = scopedItems();
   const blocks = scopedBlocks();
+  const queue = studyItems(items);
   if (!blocks.some(block => block.id === selectedBlockId)) {
-    selectedBlockId = gapItems(items)[0]?.skill.block ?? blocks[0]?.id ?? null;
+    selectedBlockId = queue[0]?.skill.block ?? gapItems(items)[0]?.skill.block ?? blocks[0]?.id ?? null;
   }
   if (!items.some(item => item.skill.id === selectedSkillId && item.skill.block === selectedBlockId)) {
-    selectedSkillId = gapItems(items).find(item => item.skill.block === selectedBlockId)?.skill.id
+    selectedSkillId = queue.find(item => item.skill.block === selectedBlockId)?.skill.id
+      ?? gapItems(items).find(item => item.skill.block === selectedBlockId)?.skill.id
       ?? items.find(item => item.skill.block === selectedBlockId)?.skill.id
       ?? items[0]?.skill.id
       ?? null;
@@ -432,9 +512,10 @@ function render() {
   const items = scopedItems();
   const blocks = scopedBlocks();
   const gaps = gapItems(items);
+  const studyQueue = studyItems(items);
   const selectedBlock = blockById.get(selectedBlockId) ?? blocks[0];
-  const selected = byId.get(selectedSkillId) ?? gaps[0] ?? items[0];
-  const suggested = gaps[0] ?? items[0];
+  const suggested = studyQueue[0] ?? gaps[0] ?? items[0];
+  const selected = byId.get(selectedSkillId) ?? suggested;
   const selectedDependencies = selected ? dependenciesOf(selected) : [];
   const selectedUnlocks = selected ? unlocksOf(selected) : [];
   const selectedHardBlockers = selected ? hardBlockersOf(selected) : [];
@@ -525,7 +606,7 @@ function render() {
       <article class="metric"><span class="eyebrow">TARGET coverage</span><strong class="big">${targetMet}/${items.length}</strong><p>${pct(targetMet, items.length)}% навыков дошли до целевого уровня</p></article>
       <article class="metric"><span class="eyebrow">Открытые MIN</span><strong class="big">${required.length - minMet}</strong><p>из них ${needsConfirmation} требуют короткого подтверждения</p></article>
     </section>
-    <section class="focus"><div><span class="eyebrow">Ближайший gap · ${priority}</span><h2>${suggested.skill.title}</h2><p>${suggested.skill.description}</p></div>${levelPath(suggested)}<div class="focus-next"><span class="label">Следующее evidence</span><strong>${nextEvidenceFor(suggested)}</strong></div></section>
+    <section class="focus"><div><span class="eyebrow">Следующий учебный шаг · ${priority}</span><h2>${suggested.skill.title}</h2><p>${suggested.skill.description}</p></div>${levelPath(suggested)}<div class="focus-next"><span class="label">Почему сейчас</span><strong>${studyPriorityReason(suggested, items, today)}</strong></div></section>
     <section class="section card" style="padding:24px"><div class="section-head"><div><span class="eyebrow">${priority} blocks</span><h2 class="section-title">Карта готовности</h2></div><p>Приоритеты считаются отдельно: P1 не снижает P0 readiness.</p></div><div class="blocks">${blocksHtml}</div></section>
     <section class="layout section">
       <div class="panel"><div class="toolbar"><div><span class="eyebrow">Roadmap · ${priority}</span><h2 class="section-title">${selectedBlock.title}</h2></div><div class="filters">${[['all','Все'],['gaps','Ниже MIN'],['confirm','Подтвердить'],['review', dueReviewCount ? `Повторить · ${dueReviewCount}` : 'Повторить'],['min','MIN'],['target','TARGET']].map(([v,t]) => `<button data-filter="${v}" class="${filter === v ? 'active' : ''}">${t}</button>`).join('')}</div></div>${groupsHtml || '<p style="color:var(--muted)">В этом фильтре навыков нет.</p>'}</div>
@@ -540,7 +621,7 @@ function render() {
         <div class="detail-section"><span class="label">Evidence</span>${ev}</div>
       </aside>
     </section>
-    <section class="section card" style="padding:24px"><div class="section-head"><div><span class="eyebrow">Next · ${priority}</span><h2 class="section-title">Ближайшие gaps</h2></div><p>Сначала короткие подтверждения, затем навыки, которые ближе всего к MIN.</p></div><div class="next-list">${nextHtml || '<p style="color:var(--muted)">Все обязательные MIN этого слоя закрыты.</p>'}</div></section>
+    <section class="section card" style="padding:24px"><div class="section-head"><div><span class="eyebrow">Next · ${priority}</span><h2 class="section-title">Ближайшие gaps</h2></div><p>Review и misconceptions выше prerequisites; затем Transfer Check и обычные gaps. Близость к MIN — только tie-break.</p></div><div class="next-list">${nextHtml || '<p style="color:var(--muted)">Все обязательные MIN этого слоя закрыты.</p>'}</div></section>
     <footer>Публичная read-only визуализация. Source of truth остаётся в private learning repository; P0 и P1 считаются независимо из опубликованных YAML.</footer>`;
 
   bindTabs();
