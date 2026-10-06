@@ -110,6 +110,16 @@ blocks:
         title: Reliability
       - id: api-rpc
         title: API и RPC
+  - id: testing-benchmarks
+    title: Testing / benchmarks
+    priority: P0
+    groups:
+      - id: unit-testing
+        title: Unit testing
+      - id: test-design
+        title: Test design / boundaries
+      - id: performance
+        title: Benchmarks
   - id: live-coding
     title: Live coding / алгоритмы
     priority: P0
@@ -767,6 +777,59 @@ skills:
     description: contract/tooling/serialization/public API vs service-to-service
     min: understanding.comparison
     target: evaluation.comparison
+
+  - id: testing-benchmarks.unit-testing-basics
+    block: testing-benchmarks
+    group: unit-testing
+    title: Unit testing basics
+    description: testing.T, table-driven tests, subtests, t.Helper, t.Cleanup и httptest; самостоятельное написание тестов на поведение
+    min: application.independent
+    target: analysis.defects
+
+  - id: testing-benchmarks.test-design
+    block: testing-benchmarks
+    group: test-design
+    title: Test design / what to test
+    description: выбор контрактов, happy path, ошибок, boundary cases и инвариантов; различие проверки поведения и деталей реализации
+    min: application.variable
+    target: evaluation.comparison
+    depends_on:
+      - id: testing-benchmarks.unit-testing-basics
+        gate: hard
+        required: application.template
+
+  - id: testing-benchmarks.test-doubles-boundaries
+    block: testing-benchmarks
+    group: test-design
+    title: Test doubles / boundaries
+    description: fake, stub, mock; что подменять, что проверять интеграционно, границы handler/use case/repository
+    min: application.variable
+    target: evaluation.comparison
+    depends_on:
+      - id: testing-benchmarks.unit-testing-basics
+        gate: hard
+        required: application.template
+      - id: go-core.interface-design
+        gate: soft
+
+  - id: testing-benchmarks.coverage-strategy
+    block: testing-benchmarks
+    group: test-design
+    title: Coverage strategy
+    description: coverage как сигнал, а не цель; оценка покрытия по риску, контрактам, ветвлениям и критичным сценариям вместо фиксированного процента
+    min: understanding.contextualization
+    target: evaluation.comparison
+    depends_on:
+      - id: testing-benchmarks.test-design
+        gate: soft
+
+  - id: testing-benchmarks.go-benchmarks
+    block: testing-benchmarks
+    group: performance
+    title: Go benchmarks
+    description: testing.B, b.Loop, go test -bench/-benchmem, allocations, корректный setup и сравнение изменений без вывода по одному шумному запуску
+    min: application.template
+    target: application.independent
 
   - id: live-coding.basic-go-coding-automation
     block: live-coding
