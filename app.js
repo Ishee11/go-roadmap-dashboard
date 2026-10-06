@@ -2,7 +2,7 @@ import { load as parseYaml } from 'https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/+e
 
 const app = document.querySelector('#app');
 const privateRepoBase = 'https://github.com/Ishee11/go-learning-roadmap/blob/main/';
-const DATA_VERSION = '2026-10-06-4';
+const DATA_VERSION = '2026-10-06-5';
 
 function showLoadError(error) {
   const message = error instanceof Error ? error.message : String(error);
@@ -241,6 +241,12 @@ function nextStep(item, blockers) {
     const blocker = blockers[0];
     return `Заблокировано: сначала ${blocker.item.skill.title} до уровня ${labelOf(blocker.requiredCode)}.`;
   }
+  if (item.entry?.active_issue) {
+    const issue = item.entry.active_issue;
+    return issue.type === 'misconception'
+      ? `Исправить misconception через theory_first: ${issue.summary}`
+      : `Закрыть gap: ${issue.summary}`;
+  }
   if (item.targetMet) return 'TARGET подтверждён: удерживать навык интервальными проверками.';
   if (item.minStatus === 'unassessed') return 'Frontier Check: определить фактический CURRENT до уровня MIN.';
   if (item.minStatus === 'needs_confirmation') return 'Transfer Check: применить тот же принцип в другом контексте без подсказок.';
@@ -409,6 +415,18 @@ function render() {
     ? `<div class="relation-list">${selectedUnlocks.map(relationHtml).join('')}</div>`
     : '<p class="relation-empty">Прямых downstream-навыков пока не размечено.</p>';
 
+  const activeIssueHtml = selected.entry?.active_issue
+    ? `<div class="detail-section active-issue">
+        <span class="label">Активное слабое место</span>
+        <div class="issue-heading">
+          <span class="issue-type issue-${selected.entry.active_issue.type}">${selected.entry.active_issue.type}</span>
+          <small>${selected.entry.active_issue.observed_at ?? ''}</small>
+        </div>
+        <p>${selected.entry.active_issue.summary ?? ''}</p>
+        ${selected.entry.active_issue.source_ref ? `<a class="issue-source" href="${privateRepoBase}${selected.entry.active_issue.source_ref}" target="_blank" rel="noreferrer">source</a>` : ''}
+      </div>`
+    : '';
+
   const ev = selected.entry?.evidence?.length
     ? `<ul class="evidence">${selected.entry.evidence.map(e => `<li><a href="${privateRepoBase}${e.ref}" target="_blank" rel="noreferrer">${e.ref}</a><small>${e.type ?? 'evidence'}${e.date ? ` · ${e.date}` : ''}</small></li>`).join('')}</ul>`
     : '<p>Подтверждающих записей пока нет.</p>';
@@ -435,6 +453,7 @@ function render() {
       <div class="panel"><div class="toolbar"><div><span class="eyebrow">Roadmap · ${priority}</span><h2 class="section-title">${selectedBlock.title}</h2></div><div class="filters">${[['all','Все'],['gaps','Ниже MIN'],['confirm','Подтвердить'],['min','MIN'],['target','TARGET']].map(([v,t]) => `<button data-filter="${v}" class="${filter === v ? 'active' : ''}">${t}</button>`).join('')}</div></div>${groupsHtml || '<p style="color:var(--muted)">В этом фильтре навыков нет.</p>'}</div>
       <aside class="detail">${status(selected)}<h2>${selected.skill.title}</h2><p>${selected.skill.description}</p>${levelPath(selected)}
         <div class="detail-section detail-next-step"><span class="label">Следующий шаг</span><p>${nextStep(selected, selectedHardBlockers)}</p></div>
+        ${activeIssueHtml}
         <div class="detail-section"><span class="label">Опирается на</span>${dependenciesHtml}</div>
         <div class="detail-section"><span class="label">Разблокирует</span>${unlocksHtml}</div>
         <div class="detail-section"><span class="label">Следующее evidence</span><p>${nextEvidenceFor(selected)}</p></div>
