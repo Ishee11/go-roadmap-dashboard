@@ -397,7 +397,7 @@ function render() {
     if (!groupItems.length) return '';
     return `<section class="group"><h3>${group.title}</h3><div class="skill-list">${groupItems.map(item => `
       <button class="skill ${item.skill.id === selectedSkillId ? 'active' : ''}" data-skill="${item.skill.id}">
-        <span class="skill-title"><strong>${item.skill.title}${isLocked(item) ? '<span class="skill-lock" title="Навык заблокирован hard prerequisite" aria-label="Заблокирован">🔒</span>' : ''}</strong><span>${item.skill.description}</span></span>
+        <span class="skill-title"><strong>${isLocked(item) ? '<span class="skill-lock" title="Навык заблокирован hard prerequisite" aria-label="Заблокирован">🔒</span>' : ''}${item.skill.title}</strong><span>${item.skill.description}</span></span>
         <span class="current">${labelOf(item.current)}</span>${status(item)}
       </button>`).join('')}</div></section>`;
   }).join('');
