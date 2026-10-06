@@ -31,7 +31,7 @@
     </button>`}).join(``),M=(s.groups??[]).map(t=>{let n=e.filter(e=>e.skill.block===T&&e.skill.group===t.id&&ue(e));return n.length?`<section class="group"><h3>${t.title}</h3><div class="skill-list">${n.map(e=>`
       <button class="skill ${e.skill.id===E?`active`:``}" data-skill="${e.skill.id}">
         <span class="skill-title"><strong>${W(e)?`<span class="skill-lock" title="Навык заблокирован hard prerequisite" aria-label="Заблокирован">🔒</span>`:``}${e.skill.title}</strong><span>${e.skill.description}</span></span>
-        <span class="current">${d(e.current)}</span>${R(e)}
+        ${R(e)}
       </button>`).join(``)}</div></section>`:``}).join(``),L=m.length?`<div class="relation-list">${m.map(oe).join(``)}</div>`:`<p class="relation-empty">Прямые prerequisites не заданы.</p>`,z=g.length?`<div class="relation-list">${g.map(se).join(``)}</div>`:`<p class="relation-empty">Прямых downstream-навыков пока не размечено.</p>`,B=f.entry?.review?`<div class="detail-section review-section review-${q(f,y)}">
         <span class="label">Повторение</span>
         <div class="review-heading">
