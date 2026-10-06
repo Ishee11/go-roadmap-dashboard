@@ -79,7 +79,7 @@ blocks:
       - id: goroutines
         title: Goroutines
       - id: shared-state
-        title: Shared state
+        title: Synchronization / shared state
       - id: channels
         title: Channels
       - id: patterns
@@ -260,7 +260,7 @@ skills:
     group: goroutines
     title: Goroutine leaks
     description: причины утечек, зависшие send/receive, отмена
-    min: understanding.contextualization
+    min: analysis.decomposition
     target: analysis.defects
     depends_on:
       - id: concurrency.goroutine-lifecycle
@@ -270,6 +270,18 @@ skills:
         required: understanding.contextualization
       - id: concurrency.channels-semantics
         gate: soft
+  - id: concurrency.happens-before
+    block: concurrency
+    group: shared-state
+    title: Happens-before / memory visibility
+    description: практическая модель видимости памяти через channel, Mutex, WaitGroup и atomic; почему одной goroutine недостаточно для гарантии видимости
+    min: understanding.contextualization
+    target: analysis.patterns
+    depends_on:
+      - id: concurrency.goroutine-lifecycle
+        gate: hard
+        required: understanding.explanation
+
   - id: concurrency.data-race
     block: concurrency
     group: shared-state
@@ -281,6 +293,8 @@ skills:
       - id: concurrency.goroutine-lifecycle
         gate: hard
         required: understanding.explanation
+      - id: concurrency.happens-before
+        gate: soft
   - id: concurrency.race-detector
     block: concurrency
     group: shared-state
@@ -296,7 +310,7 @@ skills:
     block: concurrency
     group: shared-state
     title: WaitGroup
-    description: Add/Done/Wait и корректный lifecycle
+    description: Go/Wait, Add/Done, корректный lifecycle и порядок запуска
     min: application.independent
     target: analysis.defects
     depends_on:
@@ -307,7 +321,7 @@ skills:
     block: concurrency
     group: shared-state
     title: Mutex
-    description: критическая секция и защита shared state
+    description: критическая секция, защита shared state и выбор mutex vs channel
     min: application.independent
     target: evaluation.comparison
     depends_on:
@@ -330,7 +344,7 @@ skills:
     group: shared-state
     title: Atomic
     description: простые атомарные операции и ограничения
-    min: understanding.contextualization
+    min: application.template
     target: application.variable
     depends_on:
       - id: concurrency.data-race
@@ -400,7 +414,7 @@ skills:
     group: shared-state
     title: Deadlock
     description: типовые причины и признаки
-    min: understanding.contextualization
+    min: analysis.decomposition
     target: analysis.defects
     depends_on:
       - id: concurrency.mutex
@@ -430,7 +444,7 @@ skills:
     group: patterns
     title: Bounded concurrency
     description: ограничение числа одновременно выполняемых работ
-    min: understanding.contextualization
+    min: application.template
     target: application.independent
     depends_on:
       - id: concurrency.goroutine-lifecycle
