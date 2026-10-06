@@ -1,7 +1,11 @@
-updated_at: '2026-10-05'
+updated_at: '2026-10-06'
 current: {level: application, stage: independent, confirmation: confirmed}
 evidence:
   - {ref: sessions/2026-10-04-concurrency-multiprocess-cancellation.md, type: guided_coding, date: '2026-10-04'}
   - {ref: sessions/2026-10-04-context-worker-cancel.md, type: mixed_coding, date: '2026-10-04'}
   - {ref: sessions/2026-10-05-context-timeout-parent-child.md, type: independent_coding, date: '2026-10-05'}
+review:
+  last_at: '2026-10-05'
+  next_at: '2026-10-08'
+  interval_days: 3
 note: 'WithTimeout 1200ms/ctx.Err исправлен после замечаний. В отдельной новой задаче самостоятельно реализована отмена childA через 400ms и parent через ещё 500ms, propagation на childB, select и wg.Wait. На короткой задаче MIN подтверждён чтением кода, реальные запуски и полный контракт MultiProcess пока не проверены.'
