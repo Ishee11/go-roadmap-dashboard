@@ -24,12 +24,14 @@
     </article>`}).join(``)}</div>
   </section>`:``}function Z(){return C.map(e=>`<button data-priority="${e}" class="${w===e?`active`:``}">${e===`experience`?`Кейсы из опыта`:e}</button>`).join(``)}function Q(){t.querySelectorAll(`[data-priority]`).forEach(e=>e.addEventListener(`click`,()=>{w=e.dataset.priority,E=null,D=null,T=`all`,$()}))}async function de(e,t){let n=`Продолжи обучение по skill \`${t.id}\` — \`${t.title}\` в репозитории \`Ishee11/go-learning-roadmap\`. Сначала восстанови актуальное состояние из репозитория и дальше действуй строго по инструкциям \`AGENTS.md\`.`;try{await navigator.clipboard.writeText(n)}catch{let e=document.createElement(`textarea`);e.value=n,e.setAttribute(`readonly`,``),e.style.position=`fixed`,e.style.opacity=`0`,document.body.appendChild(e),e.select(),document.execCommand(`copy`),e.remove()}let r=e.textContent;e.textContent=`Скопировано`,e.classList.add(`copied`),window.setTimeout(()=>{e.textContent=r,e.classList.remove(`copied`)},1400)}function $(){if(w===`experience`){t.innerHTML=`
       <header class="hero hero-compact">
-        <div>
+        <div class="hero-nav">
+          <div class="filters hero-tabs">${Z()}</div>
+          <div class="updated">Обновлено ${a.updated_at.slice(5).split(`-`).reverse().join(`.`)}</div>
+        </div>
+        <div class="hero-copy">
           <span class="eyebrow">Практика · заявляемый опыт</span>
           <h1>Кейсы из опыта</h1>
-          <div class="filters hero-tabs">${Z()}</div>
         </div>
-        <div class="updated">Обновлено ${a.updated_at.slice(5).split(`-`).reverse().join(`.`)}</div>
       </header>
       ${ue()}
       <footer>Практические таргеты связаны с roadmap, но подтверждаются отдельно. Подробные задания хранятся в private learning repository.</footer>`,Q();return}ee();let e=O(),r=k(),i=P(e),o=F(e),s=m.get(E)??r[0],c=o[0]??i[0]??e[0],d=y.get(D)??c,p=d?U(d):[],h=d?W(d):[],_=d?G(d):[],v=q();if(!s||!d||!c){t.innerHTML=`<p class="loading">Для выбранного приоритета пока нет навыков.</p>`;return}let b=e.filter(e=>e.skill.min!=null),x=b.filter(e=>e.targetMet||e.minStatus===`min_met`).length,S=e.filter(e=>e.targetMet).length,C=b.filter(e=>e.minStatus===`needs_confirmation`).length,A=e.filter(e=>e.skill.block===s.id).filter(e=>{let t=Y(e,v);return t===`due`||t===`overdue`}).length,j=r.map(t=>{let n=oe(t,e);return`<button class="block ${t.id===E?`active`:``}" data-block="${t.id}">
@@ -61,12 +63,14 @@
     <span class="idx">${String(t+1).padStart(2,`0`)}</span><span class="next-main"><strong>${e.skill.title}</strong><small>${m.get(e.skill.block)?.title??``}</small></span>
     <span class="next-level">${f(e.current)} → ${f(e.skill.min)}</span>${z(e)}</button>`).join(``);t.innerHTML=`
     <header class="hero hero-compact">
-      <div>
+      <div class="hero-nav">
+        <div class="filters hero-tabs">${Z()}</div>
+        <div class="updated">Обновлено ${l.updated_at.slice(5).split(`-`).reverse().join(`.`)}</div>
+      </div>
+      <div class="hero-copy">
         <span class="eyebrow">${w} · ${u.get(w)?.label??`Readiness`} · Go backend middle</span>
         <h1>Go Middle Readiness</h1>
-        <div class="filters hero-tabs">${Z()}</div>
       </div>
-      <div class="updated">Обновлено ${l.updated_at.slice(5).split(`-`).reverse().join(`.`)}</div>
     </header>
     <section class="summary" aria-label="Сводка готовности">
       <article class="summary-item summary-primary">
