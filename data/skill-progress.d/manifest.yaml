@@ -5,3 +5,4 @@ skills:
   - go-core.panic-recover
   - concurrency.context
   - concurrency.select
+  - concurrency.goroutine-ownership-termination

@@ -1,0 +1,11 @@
+updated_at: '2026-10-06'
+current: {level: analysis, stage: defects, confirmation: confirmed}
+evidence:
+  - {ref: knowledge/concurrency.yaml, type: explanation}
+  - {ref: sessions/2026-09-08-concurrency-diagnostic.md, type: explanation, date: '2026-09-08'}
+  - {ref: sessions/2026-10-06-goroutine-ownership-termination.md, type: transfer_check, date: '2026-10-06'}
+review:
+  last_at: '2026-10-06'
+  next_at: '2026-10-13'
+  interval_days: 7
+note: 'TARGET подтверждён новым Consumer code-review: самостоятельно найдены отсутствие внешнего wait, неотслеживаемые дочерние goroutine и closed-channel lifecycle; написана двухуровневая схема ownership через WaitGroup.Go + cancel/wait. Кооперативное использование ctx внутри блокирующей работы понимается; повторить на новом кейсе через 7 дней.'
