@@ -1,8 +1,0 @@
-version: 1
-updated_at: '2026-10-06'
-skills:
-  - go-core.defer
-  - go-core.panic-recover
-  - concurrency.context
-  - concurrency.select
-  - concurrency.goroutine-ownership-termination
