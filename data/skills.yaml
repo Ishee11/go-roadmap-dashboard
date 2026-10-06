@@ -439,11 +439,30 @@ skills:
         required: application.template
       - id: concurrency.context
         gate: soft
+  - id: concurrency.pipeline-fanout-fanin
+    block: concurrency
+    group: patterns
+    title: Pipeline / fan-out / fan-in
+    description: стадии producer/processing/consumer, распределение работы, merge результатов, корректное закрытие и отмена; errgroup как production-вариант координации
+    min: application.template
+    target: synthesis.combination
+    depends_on:
+      - id: concurrency.channels-semantics
+        gate: hard
+        required: application.template
+      - id: concurrency.channel-lifecycle
+        gate: hard
+        required: understanding.contextualization
+      - id: concurrency.waitgroup
+        gate: soft
+      - id: concurrency.context
+        gate: soft
+
   - id: concurrency.bounded-concurrency
     block: concurrency
     group: patterns
-    title: Bounded concurrency
-    description: ограничение числа одновременно выполняемых работ
+    title: Semaphore / bounded concurrency
+    description: ограничение числа одновременно выполняемых работ через buffered channel semaphore или x/sync/semaphore
     min: application.template
     target: application.independent
     depends_on:
