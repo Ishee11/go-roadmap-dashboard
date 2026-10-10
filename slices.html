@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d1117" />
+  <meta name="description" content="Интерактивная статья о слайсах Go: len, cap, общий массив, append и практические задания." />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <title>Слайсы Go — интерактивный справочник</title>
+  <script type="module" crossorigin src="./assets/slices-QUg6qU-V.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/pwa-register-ByC4ydEP.js">
+  <link rel="stylesheet" crossorigin href="./assets/pwa-register-DoYOE3Kg.css">
+  <link rel="stylesheet" crossorigin href="./assets/slices-De9Nz90N.css">
+</head>
+<body class="slices-page">
+  <div class="slice-shell">
+    <header class="slice-top">
+      <a class="slice-back" href="./index.html" aria-label="Вернуться к карте навыков">← К дашборду</a>
+      <span class="slice-brand">GO / MIDDLE <span>· СПРАВОЧНИК</span></span>
+    </header>
+    <div class="slice-heading">
+      <div class="slice-kicker">Go core / коллекции</div>
+      <h1>Слайсы без магии</h1>
+      <p>Не запоминать результаты <code>append</code>, а понимать, <strong>какой массив</strong> стоит за слайсом и <strong>куда указывает</strong> его заголовок.</p>
+      <div class="slice-tags"><span>10 минут на модель</span><span>2 эксперимента</span><span>3 проверки себя</span></div>
+    </div>
+
+    <div class="slice-layout">
+      <nav class="slice-toc" aria-label="Разделы статьи">
+        <span>Содержание</span>
+        <a href="#model">01 · Модель памяти</a>
+        <a href="#window">02 · Окно на массив</a>
+        <a href="#append">03 · Append</a>
+        <a href="#rules">04 · Что помнить</a>
+        <a href="#quiz">05 · Проверь себя</a>
+      </nav>
+      <main class="slice-article">
+        <section id="model" class="slice-section">
+          <div class="slice-section-index">01 / ОСНОВА</div>
+          <h2>Слайс — не массив</h2>
+          <p>Слайс в Go — небольшая структура-описатель: <b>указатель на начало доступных элементов</b>, длина (<code>len</code>) и ёмкость (<code>cap</code>). Данные лежат в <em>базовом массиве</em>.</p>
+          <div class="slice-descriptor">
+            <div><small>Data</small><strong>→ underlying array</strong></div>
+            <div><small>len</small><strong>Сколько видно</strong></div>
+            <div><small>cap</small><strong>Сколько доступно до конца области</strong></div>
+          </div>
+          <p class="slice-note">Операция <code>copy</code> копирует элементы. Простое присваивание <code>b := a</code> копирует только описание слайса — массив остаётся общим.</p>
+        </section>
+
+        <section id="window" class="slice-section">
+          <div class="slice-section-index">02 / ИНТЕРАКТИВНО</div>
+          <h2>Подвигай границы</h2>
+          <p>Представь массив из пяти элементов. Меняй границы <code>a[low:high]</code> и следи, как вычисляются длина и ёмкость нового слайса.</p>
+          <div class="slice-lab">
+            <div class="slice-lab-top">
+              <code id="window-code">s := a[1:3]</code>
+              <div class="slice-metrics"><span>len <b id="window-len">2</b></span><span>cap <b id="window-cap">4</b></span></div>
+            </div>
+            <div class="slice-controls">
+              <label>low <output id="low-value" for="low">1</output><input id="low" type="range" min="0" max="5" value="1" /></label>
+              <label>high <output id="high-value" for="high">3</output><input id="high" type="range" min="0" max="5" value="3" /></label>
+            </div>
+            <div class="slice-array-label">Базовый массив <code>a := [5]int{10, 20, 30, 40, 50}</code></div>
+            <div class="slice-cells" id="window-cells" aria-live="polite"></div>
+            <div class="slice-legend"><span><i class="legend-visible"></i> Внутри len</span><span><i class="legend-spare"></i> За len, но внутри cap</span><span><i class="legend-before"></i> До начала слайса</span></div>
+            <p id="window-explain" class="slice-lab-explain" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <section id="append" class="slice-section">
+          <div class="slice-section-index">03 / КЛЮЧЕВОЙ МЕХАНИЗМ</div>
+          <h2>Что на самом деле делает append?</h2>
+          <p><code>append</code> возвращает <strong>новый заголовок слайса</strong>. Если ёмкости хватает, элементы добавляются в тот же базовый массив. Иначе выделяется другой массив и копируются элементы.</p>
+          <div class="slice-lab">
+            <div class="slice-switch" role="group" aria-label="Выбрать сценарий append">
+              <button type="button" data-mode="shared" aria-pressed="true">Ёмкости хватает</button>
+              <button type="button" data-mode="detached" aria-pressed="false">Ёмкость исчерпана</button>
+            </div>
+            <pre class="slice-code"><code id="append-code"></code></pre>
+            <div class="slice-array-label">Исходный массив <code>a</code></div>
+            <div id="append-base" class="slice-cells"></div>
+            <div class="slice-array-label">Результат <code>s</code></div>
+            <div id="append-result" class="slice-cells"></div>
+            <div id="append-explain" class="slice-lab-explain" role="status"></div>
+          </div>
+          <p class="slice-note">Точная стратегия роста ёмкости нового массива — деталь реализации runtime. Не рассчитывай на конкретную формулу увеличения <code>cap</code>.</p>
+        </section>
+
+        <section id="rules" class="slice-section">
+          <div class="slice-section-index">04 / ПРАВИЛА</div>
+          <h2>Что важно для реального кода</h2>
+          <div class="slice-rule"><b>Общий массив</b><p>Изменение <code>s[i]</code> видно через другие слайсы, которые ссылаются на тот же элемент массива.</p></div>
+          <div class="slice-rule"><b>Новая ёмкость</b><p>Полное выражение <code>a[low:high:max]</code> ограничивает <code>cap</code> значением <code>max-low</code> и помогает избежать перезаписи исходного массива через <code>append</code>.</p></div>
+          <div class="slice-rule"><b>Передача в функцию</b><p>Заголовок слайса передаётся по значению. Изменения существующих элементов обычно видны вызывающему коду; новый результат <code>append</code> нужно вернуть, если вызывающему нужен обновлённый слайс.</p></div>
+          <div class="slice-rule"><b>nil и пустой слайс</b><p>Оба могут иметь <code>len == 0</code> и <code>cap == 0</code>, но только nil-слайс равен <code>nil</code>. JSON-кодирование без специальных настроек обычно различается: <code>null</code> и <code>[]</code>.</p></div>
+          <div class="slice-rule"><b>Удержание памяти</b><p>Маленький подслайс может удерживать весь большой базовый массив. Если нужно сохранить лишь небольшой фрагмент надолго, сделай независимую копию.</p></div>
+        </section>
+
+        <section id="quiz" class="slice-section">
+          <div class="slice-section-index">05 / АКТИВНОЕ ВОСПРОИЗВЕДЕНИЕ</div>
+          <h2>Предскажи результат</h2>
+          <p>Сначала ответь сам, затем проверяй. Эти вопросы не меняют твой статус в дашборде — это тренажёр, а не подтверждение навыка.</p>
+          <div id="slice-quiz"></div>
+        </section>
+        <footer class="slice-footer"><a href="./index.html">← Вернуться к карте навыков</a><span>Учебный справочник · без сохранения оценок</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

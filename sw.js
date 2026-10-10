@@ -1,7 +1,7 @@
 /* Generated from allowlisted public files. Never caches private GitHub documents. */
-const CACHE_NAME = "go-middle-public-1514fabb829ec155";
+const CACHE_NAME = "go-middle-public-39b46a2ad63c5dfe";
 const CACHE_PREFIX = 'go-middle-public-';
-const PRECACHE = ["./apple-touch-icon.png","./assets/index-BfAUnx4D.js","./assets/index-CDoHcJqV.css","./data/public-febc85c9cb9ddf42.json","./icon-192.png","./icon-512.png","./index.html","./manifest.webmanifest"];
+const PRECACHE = ["./apple-touch-icon.png","./assets/index-BMSSq81K.css","./assets/index-CqpZ3Szu.js","./assets/pwa-register-ByC4ydEP.js","./assets/pwa-register-DoYOE3Kg.css","./assets/slices-De9Nz90N.css","./assets/slices-QUg6qU-V.js","./data/public-febc85c9cb9ddf42.json","./icon-192.png","./icon-512.png","./index.html","./manifest.webmanifest","./slices.html"];
 const ROOT = self.registration.scope;
 const ALLOWED = new Set(PRECACHE.map(file => new URL(file, ROOT).pathname));
 self.addEventListener('install', event => {
@@ -20,7 +20,8 @@ self.addEventListener('fetch', event => {
   const url=new URL(request.url);
   if(url.origin !== self.location.origin || !url.pathname.startsWith(new URL(ROOT).pathname)) return;
   if(request.mode === 'navigate'){
-    event.respondWith(fetch(request).catch(async () => await caches.match(new URL('./index.html', ROOT)) || Response.error()));
+    const fallback = url.pathname.endsWith('/slices.html') ? './slices.html' : './index.html';
+    event.respondWith(fetch(request).catch(async () => await caches.match(new URL(fallback, ROOT)) || Response.error()));
     return;
   }
   if(!ALLOWED.has(url.pathname)) return;
