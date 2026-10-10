@@ -9,10 +9,10 @@
   <link rel="icon" type="image/png" href="./icon-192.png" />
   <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
   <title>Слайсы Go — интерактивный справочник</title>
-  <script type="module" crossorigin src="./assets/slices-QUg6qU-V.js"></script>
+  <script type="module" crossorigin src="./assets/slices-CpIVg7C7.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/pwa-register-ByC4ydEP.js">
   <link rel="stylesheet" crossorigin href="./assets/pwa-register-DoYOE3Kg.css">
-  <link rel="stylesheet" crossorigin href="./assets/slices-De9Nz90N.css">
+  <link rel="stylesheet" crossorigin href="./assets/slices-2ZGmvIEl.css">
 </head>
 <body class="slices-page">
   <div class="slice-shell">
@@ -37,26 +37,92 @@
         <a href="#quiz">05 · Проверь себя</a>
       </nav>
       <main class="slice-article">
-        <section id="model" class="slice-section">
-          <div class="slice-section-index">01 / ОСНОВА</div>
-          <h2>Слайс — не массив</h2>
-          <p>Слайс в Go — небольшая структура-описатель: <b>указатель на начало доступных элементов</b>, длина (<code>len</code>) и ёмкость (<code>cap</code>). Данные лежат в <em>базовом массиве</em>.</p>
-          <div class="slice-descriptor">
-            <div><small>Data</small><strong>→ underlying array</strong></div>
-            <div><small>len</small><strong>Сколько видно</strong></div>
-            <div><small>cap</small><strong>Сколько доступно до конца области</strong></div>
+                <section id="model" class="slice-section slice-model">
+          <div class="slice-section-index">01 / КАК УСТРОЕН СЛАЙС</div>
+          <h2>Слайс — это не массив. Это описание массива.</h2>
+          <div class="memory-thesis">
+            <strong>Массив хранит значения.</strong>
+            <span>Слайс хранит, <b>откуда начать</b>, <b>сколько видно</b> и <b>насколько можно расшириться</b>.</span>
           </div>
-          <p class="slice-note">Операция <code>copy</code> копирует элементы. Простое присваивание <code>b := a</code> копирует только описание слайса — массив остаётся общим.</p>
+
+          <div class="memory-definition">
+            <div class="memory-code-panel">
+              <div class="memory-overline">Внутри Go runtime</div>
+              <pre class="memory-code"><code>type slice struct {
+    <span class="memory-ink-pointer">array</span> unsafe.Pointer
+    <span class="memory-ink-len">len</span>   int
+    <span class="memory-ink-cap">cap</span>   int
+}</code></pre>
+              <a href="https://go.dev/src/runtime/slice.go" target="_blank" rel="noreferrer">Открыть исходник Go ↗</a>
+            </div>
+            <div class="memory-definitions" aria-label="Поля заголовка слайса">
+              <div class="memory-definition-row"><code class="memory-ink-pointer">array</code><span><b>Адрес начала.</b> Указатель на первый элемент слайса, не обязательно на начало массива.</span></div>
+              <div class="memory-definition-row"><code class="memory-ink-len">len</code><span><b>Видимая часть.</b> Сколько элементов доступно по обычному индексу.</span></div>
+              <div class="memory-definition-row"><code class="memory-ink-cap">cap</code><span><b>Запас вправо.</b> Сколько элементов помещается от начала слайса в доступной области массива.</span></div>
+            </div>
+          </div>
+
+          <div class="memory-example">
+            <div class="memory-example-intro">
+              <div class="memory-overline">Один пример — вся модель</div>
+              <pre class="memory-example-code"><code>a := [5]int{10, 20, 30, 40, 50}
+s := a[1:3]</code></pre>
+              <p>В массиве пять чисел. Слайс <code>s</code> начинается <b>с элемента 20</b>, видит два элемента и располагает четырьмя позициями до конца массива.</p>
+            </div>
+
+            <div class="memory-visual" id="memory-visual">
+              <div class="memory-visual-heading"><span>Заголовок слайса — отдельно</span><span>Массив с данными — отдельно</span></div>
+              <div class="memory-headers" id="memory-headers">
+                <div class="memory-header" id="memory-header-s">
+                  <div class="memory-header-title"><span class="memory-object-name">slice s</span><span>описатель</span></div>
+                  <div class="memory-header-field"><code class="memory-ink-pointer">array</code><strong>→ &amp;a[1]</strong></div>
+                  <div class="memory-header-field"><code class="memory-ink-len">len</code><strong>2</strong></div>
+                  <div class="memory-header-field"><code class="memory-ink-cap">cap</code><strong>4</strong></div>
+                  <span class="memory-pin" id="memory-pin-s" aria-hidden="true"></span>
+                </div>
+                <div class="memory-header memory-header-copy" id="memory-header-b" hidden>
+                  <div class="memory-header-title"><span class="memory-object-name">slice b</span><span>копия описателя</span></div>
+                  <div class="memory-header-field"><code class="memory-ink-pointer">array</code><strong>→ &amp;a[1]</strong></div>
+                  <div class="memory-header-field"><code class="memory-ink-len">len</code><strong>2</strong></div>
+                  <div class="memory-header-field"><code class="memory-ink-cap">cap</code><strong>4</strong></div>
+                  <span class="memory-pin" id="memory-pin-b" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="memory-wire-space" aria-hidden="true"></div>
+              <div class="memory-array-heading"><strong>Базовый массив a</strong><span>Значения находятся здесь</span></div>
+              <div class="memory-array" aria-label="Массив a: индекс 0 значение 10, индекс 1 значение 20, индекс 2 значение 30, индекс 3 значение 40, индекс 4 значение 50">
+                <div class="memory-cell memory-cell-before" id="memory-cell-0"><small>0</small><strong>10</strong></div>
+                <div class="memory-cell memory-cell-visible" id="memory-cell-1"><small>1</small><strong>20</strong><span class="memory-start-tag">← array</span></div>
+                <div class="memory-cell memory-cell-visible" id="memory-cell-2"><small>2</small><strong>30</strong></div>
+                <div class="memory-cell memory-cell-spare" id="memory-cell-3"><small>3</small><strong>40</strong></div>
+                <div class="memory-cell memory-cell-spare" id="memory-cell-4"><small>4</small><strong>50</strong></div>
+              </div>
+              <div class="memory-range-group" aria-label="Границы len и cap">
+                <div class="memory-track memory-track-len"><span>len = 2 · видно</span></div>
+                <div class="memory-track memory-track-cap"><span>cap = 4 · доступно</span></div>
+              </div>
+              <svg class="memory-connections" id="memory-connections" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs><marker id="memory-arrow-tip" markerWidth="7" markerHeight="7" refX="6.2" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#f6c779" stroke-width="1.25"/></marker></defs><g id="memory-arrow-lines"></g></svg>
+              <div class="memory-legend">
+                <span><i class="memory-dot-before"></i>До начала слайса</span>
+                <span><i class="memory-dot-visible"></i>Внутри len</span>
+                <span><i class="memory-dot-spare"></i>Запас cap</span>
+              </div>
+            </div>
+            <div class="memory-takeaway"><span>Запомни</span><strong><code>array</code> указывает на <code>a[1]</code>, а не на <code>a[0]</code>. <code>len</code> и <code>cap</code> считаются от этой точки.</strong></div>
+            <button class="memory-copy-toggle" type="button" id="memory-copy-toggle" aria-expanded="false" aria-controls="memory-header-b memory-copy-explain">＋ Что произойдёт при <code>b := s</code>?</button>
+            <p class="memory-copy-explain" id="memory-copy-explain" hidden>Теперь заголовков два — <code>s</code> и <code>b</code>, но обе стрелки ведут к <b>одному и тому же элементу массива</b>. Присваивание копирует три поля, а не пять чисел. Изменение <code>b[0]</code> затронет и <code>s[0]</code>.</p>
+          </div>
+          <p class="slice-note">Это внутреннее представление runtime, а не структура, которую можно объявить или использовать вместо встроенного типа <code>[]int</code>. Поле <code>array</code> напрямую из обычного Go-кода недоступно.</p>
         </section>
 
-        <section id="window" class="slice-section">
+<section id="window" class="slice-section">
           <div class="slice-section-index">02 / ИНТЕРАКТИВНО</div>
           <h2>Подвигай границы</h2>
-          <p>Представь массив из пяти элементов. Меняй границы <code>a[low:high]</code> и следи, как вычисляются длина и ёмкость нового слайса.</p>
+          <p>Представь массив из пяти элементов. Меняй границы <code>a[low:high]</code> и следи за теми же тремя полями заголовка: началом, длиной и ёмкостью.</p>
           <div class="slice-lab">
             <div class="slice-lab-top">
               <code id="window-code">s := a[1:3]</code>
-              <div class="slice-metrics"><span>len <b id="window-len">2</b></span><span>cap <b id="window-cap">4</b></span></div>
+              <div class="slice-metrics"><span>array <b id="window-pointer">&amp;a[1]</b></span><span>len <b id="window-len">2</b></span><span>cap <b id="window-cap">4</b></span></div>
             </div>
             <div class="slice-controls">
               <label>low <output id="low-value" for="low">1</output><input id="low" type="range" min="0" max="5" value="1" /></label>
