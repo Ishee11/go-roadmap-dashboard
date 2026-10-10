@@ -9,10 +9,10 @@
   <link rel="icon" type="image/png" href="./icon-192.png" />
   <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
   <title>Слайсы Go — интерактивный справочник</title>
-  <script type="module" crossorigin src="./assets/slices-CpIVg7C7.js"></script>
+  <script type="module" crossorigin src="./assets/slices-UdQIJqOk.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/pwa-register-ByC4ydEP.js">
   <link rel="stylesheet" crossorigin href="./assets/pwa-register-DoYOE3Kg.css">
-  <link rel="stylesheet" crossorigin href="./assets/slices-2ZGmvIEl.css">
+  <link rel="stylesheet" crossorigin href="./assets/slices-CDJUtZlc.css">
 </head>
 <body class="slices-page">
   <div class="slice-shell">
@@ -23,8 +23,7 @@
     <div class="slice-heading">
       <div class="slice-kicker">Go core / коллекции</div>
       <h1>Слайсы без магии</h1>
-      <p>Не запоминать результаты <code>append</code>, а понимать, <strong>какой массив</strong> стоит за слайсом и <strong>куда указывает</strong> его заголовок.</p>
-      <div class="slice-tags"><span>10 минут на модель</span><span>2 эксперимента</span><span>3 проверки себя</span></div>
+      <p>Один базовый массив, три поля заголовка и несколько закономерностей, из которых следует почти всё поведение слайсов.</p>
     </div>
 
     <div class="slice-layout">
@@ -71,7 +70,7 @@ s := a[1:3]</code></pre>
             </div>
 
             <div class="memory-visual" id="memory-visual">
-              <div class="memory-visual-heading"><span>Заголовок слайса — отдельно</span><span>Массив с данными — отдельно</span></div>
+              <div class="memory-visual-heading"><span>Заголовок слайса</span><span>Базовый массив ниже</span></div>
               <div class="memory-headers" id="memory-headers">
                 <div class="memory-header" id="memory-header-s">
                   <div class="memory-header-title"><span class="memory-object-name">slice s</span><span>описатель</span></div>
@@ -108,7 +107,7 @@ s := a[1:3]</code></pre>
                 <span><i class="memory-dot-spare"></i>Запас cap</span>
               </div>
             </div>
-            <div class="memory-takeaway"><span>Запомни</span><strong><code>array</code> указывает на <code>a[1]</code>, а не на <code>a[0]</code>. <code>len</code> и <code>cap</code> считаются от этой точки.</strong></div>
+            <div class="memory-takeaway"><span>Главное</span><strong><code>array</code> указывает на <code>a[1]</code>, не на <code>a[0]</code>. От этой точки считаются <code>len</code> и <code>cap</code>.</strong></div>
             <button class="memory-copy-toggle" type="button" id="memory-copy-toggle" aria-expanded="false" aria-controls="memory-header-b memory-copy-explain">＋ Что произойдёт при <code>b := s</code>?</button>
             <p class="memory-copy-explain" id="memory-copy-explain" hidden>Теперь заголовков два — <code>s</code> и <code>b</code>, но обе стрелки ведут к <b>одному и тому же элементу массива</b>. Присваивание копирует три поля, а не пять чисел. Изменение <code>b[0]</code> затронет и <code>s[0]</code>.</p>
           </div>
