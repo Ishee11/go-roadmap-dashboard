@@ -40,7 +40,6 @@ import"./pwa-register-ByC4ydEP.js";var e=new URL(`../data/public-84e9eeb9bedeb9b
         <div class="hero-copy">
           <span class="eyebrow">Практика · заявляемый опыт</span>
           <h1>Кейсы из опыта</h1>
-        <a class="reference-link" href="./slices.html">Справочник: слайсы Go <span aria-hidden="true">↗</span></a>
         </div>
       </header>
       ${Me()}
@@ -78,7 +77,6 @@ import"./pwa-register-ByC4ydEP.js";var e=new URL(`../data/public-84e9eeb9bedeb9b
       <div class="hero-copy">
         <span class="eyebrow">${b} · ${u.get(b)?.label??`Readiness`} · Go backend middle</span>
         <h1>Go Middle Readiness</h1>
-        <a class="reference-link" href="./slices.html">Справочник: слайсы Go <span aria-hidden="true">↗</span></a>
       </div>
     </header>
     <section class="summary" aria-label="Сводка готовности">
