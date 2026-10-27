@@ -1,7 +1,7 @@
 /* Generated from allowlisted public files. Never caches private GitHub documents. */
-const CACHE_NAME = "go-middle-public-243434da10f97517";
+const CACHE_NAME = "go-middle-public-7426dffa61f7b6ba";
 const CACHE_PREFIX = 'go-middle-public-';
-const PRECACHE = ["./apple-touch-icon.png","./assets/index-BMSSq81K.css","./assets/index-Dd3MlkUa.js","./assets/pwa-register-ByC4ydEP.js","./assets/pwa-register-DoYOE3Kg.css","./assets/slices-CDJUtZlc.css","./assets/slices-UdQIJqOk.js","./data/public-43af638011c8b8dc.json","./icon-192.png","./icon-512.png","./index.html","./manifest.webmanifest","./slices.html"];
+const PRECACHE = ["./apple-touch-icon.png","./assets/index-BMSSq81K.css","./assets/index-FuPav-7G.js","./assets/pwa-register-ByC4ydEP.js","./assets/pwa-register-DoYOE3Kg.css","./assets/slices-CDJUtZlc.css","./assets/slices-UdQIJqOk.js","./data/public-d90e5bc499485162.json","./icon-192.png","./icon-512.png","./index.html","./manifest.webmanifest","./slices.html"];
 const ROOT = self.registration.scope;
 const ALLOWED = new Set(PRECACHE.map(file => new URL(file, ROOT).pathname));
 self.addEventListener('install', event => {
